@@ -11,44 +11,7 @@
 /* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied  */
 /* See the License for the specific language governing permissions and      */
 /* limitations under the License.                                           */
-
-/* The Enigma machines were a family of portable cipher machines
-with rotor scramblers. Good operating procedures, properly enforced,
-would have made the cipher unbreakable.
-However, most of the German armed and secret services and civilian agencies
-that used Enigma employed poor procedures and it was these that allowed the
-cipher to be broken.
-
-The German plugboard-equipped Enigma became the Third Reich's
-principal crypto-system. It was reconstructed by the Polish
-General Staff's Cipher Bureau in December 1932 with the aid of
-French-supplied intelligence material that had been obtained
-from a German spy. Shortly before the outbreak of World War II,
-the Polish Cipher Bureau initiated the French and British into its
-Enigma-breaking techniques and technology at a conference held in Warsaw.
-
-From this beginning, the British Government Code and Cypher School at
-Bletchley Park built up an extensive cryptanalytic facility. Initially,
-the decryption was mainly of Luftwaffe and a few Army messages,
-as the German Navy employed much more secure procedures for using Enigma.
-
-Alan Turing, a Cambridge University mathematician and logician,
-provided much of the original thinking that led to the design of
-the cryptanalytical Bombe machines, and the eventual breaking of naval Enigma.
-However, when the German Navy introduced an Enigma version with a
-fourth rotor for its U-boats, there was a prolonged period when those messages
-could not be decrypted. With the capture of relevant cipher keys and the use
-of much faster U.S. Navy Bombes, regular, rapid reading of
-German naval messages resumed.
-
-The rotors (alternatively wheels or drums, Walzen in German)
-formed the heart of an Enigma machine. Each rotor was a disc
-approximately 10 cm (3.9 in) in diameter made from hard rubber
-or bakelite with brass spring-loaded pins on one face arranged
-in a circle; on the other side are a corresponding number
-of circular electrical contacts. The pins and contacts represent
-the alphabet, typically the 26 letters A to Z.
-
+/*
 Setting Wiring                      Notch   Window  Turnover
 Base    ABCDEFGHIJKLMNOPQRSTUVWXYZ
 I       EKMFLGDQVZNTOWYHXUSPAIBRCJ  Y       Q       R
@@ -60,25 +23,13 @@ VI      JPGVOUMFYQBENHZRDKASXLICTW  H/U     Z/M     A/N
 VII     NZJHGRCXMYSWBOUFAIVLPEKQDT  H/U     Z/M     A/N
 VIII    FKQHTLXOCBJSPDZRAMEWNIUYGV  H/U     Z/M     A/N
 
-With the exception of the early Enigma models A and B,
-the last rotor came before a reflector (German: Umkehrwalze,
-meaning reversal rotor), a patented feature distinctive of the
-Enigma family amongst the various rotor machines designed
-in the period. The reflector connected outputs of the
-last rotor in pairs, redirecting current back through the
-rotors by a different route. The reflector ensured that
-Enigma is self-reciprocal: conveniently, encryption was
-the same as decryption. However, the reflector also gave
-Enigma the property that no letter ever encrypted to itself.
-This was a severe conceptual flaw and a cryptological mistake
-subsequently exploited by codebreakers.
-
 Setting     Wiring
 Base        ABCDEFGHIJKLMNOPQRSTUVWXYZ
 A           EJMZALYXVBWFCRQUONTSPIKHGD
 B           YRUHQSLDPXNGOKMIEBFZCWVJAT
 C           FVPJIAOYEDRZXWGCTKUQSBNMHL
 */
+
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -206,11 +157,10 @@ int main() {
     struct Enigma machine = {}; // inicializado con valores por defecto
     int i, character, index;
 
-    // Cadena de entrada estática
     char input[] = "HELLO WORLD";  // Cadena de prueba
     int length = strlen(input);    // Longitud de la cadena
 
-    // Configuración estática
+    // Configs
     int rotor1 = 3;  // Rotor III
     int rotor2 = 2;  // Rotor II
     int rotor3 = 1;  // Rotor I
@@ -218,7 +168,7 @@ int main() {
     int offset2 = 0; // Offset del Rotor 2
     int offset3 = 0; // Offset del Rotor 3
 
-    // Configurar la máquina Enigma
+    // Configurar Enigma
     machine.reflector = reflectors[1]; // Usamos el reflector B
     machine.rotors[0] = new_rotor(&machine, rotor1, offset1);
     machine.rotors[1] = new_rotor(&machine, rotor2, offset2);
@@ -252,7 +202,7 @@ int main() {
             }
         }
 
-        // Pasar a través de los rotores (hacia adelante)
+        // Pasar a traves de los rotores (hacia adelante)
         for (i = 0; i < machine.numrotors; i++) {
             index = rotor_forward(&machine.rotors[i], index);
         }
@@ -261,15 +211,15 @@ int main() {
         character = machine.reflector[index];
         index = str_index(alpha, character);
 
-        // Pasar de vuelta a través de los rotores (en reversa)
+        // Pasar de vuelta a traves de los rotores (en reversa)
         for (i = machine.numrotors - 1; i >= 0; i--) {
             index = rotor_reverse(&machine.rotors[i], index);
         }
 
-        // Salida del carácter cifrado
+        // Salida del caracter cifrado
         putchar(alpha[index]);
     }
 
-    putchar('\n');  // Salto de línea al final
+    putchar('\n');  // Salto de linea al final
     return 0;
 }
