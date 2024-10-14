@@ -103,7 +103,7 @@ int rotor_reverse(struct Rotor *rotor, int index) {
 
 }
 
-private struct Enigma machine = {};
+static struct Enigma machine = {};
 
 int enigma_init(int rotor1 ,int rotor2 ,int rotor3, int offset1, int offset2, int offset3)
 {
