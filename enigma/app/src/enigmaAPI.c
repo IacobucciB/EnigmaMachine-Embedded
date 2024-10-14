@@ -1,41 +1,14 @@
-/* Copyright 2013 Cory Lutton                                               */
-/*                                                                          */
-/* Licensed under the Apache License, Version 2.0 (the "License");          */
-/* you may not use this file except in compliance with the License.         */
-/* You may obtain a copy of the License at                                  */
-/*                                                                          */
-/*    http://www.apache.org/licenses/LICENSE-2.0                            */
-/*                                                                          */
-/* Unless required by applicable law or agreed to in writing, software      */
-/* distributed under the License is distributed on an "AS IS" BASIS,        */
-/* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied  */
-/* See the License for the specific language governing permissions and      */
-/* limitations under the License.                                           */
-/*
-Setting Wiring                      Notch   Window  Turnover
-Base    ABCDEFGHIJKLMNOPQRSTUVWXYZ
-I       EKMFLGDQVZNTOWYHXUSPAIBRCJ  Y       Q       R
-II      AJDKSIRUXBLHWTMCQGZNPYFVOE  M       E       F
-III     BDFHJLCPRTXVZNYEIWGAKMUSQO  D       V       W
-IV      ESOVPZJAYQUIRHXLNFTGKDCMWB  R       J       K
-V       VZBRGITYUPSDNHLXAWMJQOFECK  H       Z       A
-VI      JPGVOUMFYQBENHZRDKASXLICTW  H/U     Z/M     A/N
-VII     NZJHGRCXMYSWBOUFAIVLPEKQDT  H/U     Z/M     A/N
-VIII    FKQHTLXOCBJSPDZRAMEWNIUYGV  H/U     Z/M     A/N
+#include "board.h"
 
-Setting     Wiring
-Base        ABCDEFGHIJKLMNOPQRSTUVWXYZ
-A           EJMZALYXVBWFCRQUONTSPIKHGD
-B           YRUHQSLDPXNGOKMIEBFZCWVJAT
-C           FVPJIAOYEDRZXWGCTKUQSBNMHL
-*/
+#define TICKRATE_HZ (1000)
 
 #include <ctype.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 
 #define ROTATE 26
+
+static volatile uint32_t tick_ct = 0; // Esto no va
 
 const char *alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const char *rotor_ciphers[] = {
@@ -153,9 +126,26 @@ int rotor_reverse(struct Rotor *rotor, int index) {
 /*
  * Run the enigma machine
  **/
-int main() {
-    struct Enigma machine = {}; // inicializado con valores por defecto
-    int i, character, index;
+
+void SysTick_Handler(void) {
+   tick_ct++;
+}
+
+void delay(uint32_t tk) {
+   uint32_t end = tick_ct + tk;
+   while(tick_ct < end)
+       __WFI();
+}
+
+char output[] = "HELLO WORLD"; 
+
+int main(void) {
+   SystemCoreClockUpdate();
+   Board_Init();
+   SysTick_Config(SystemCoreClock / TICKRATE_HZ);
+   
+   struct Enigma machine = {}; // inicializado con valores por defecto
+   int i, character, index;
 
     char input[] = "HELLO WORLD";  // Cadena de prueba
     int length = strlen(input);    // Longitud de la cadena
@@ -179,7 +169,7 @@ int main() {
         character = input[pos];
 
         if (!isalpha(character)) {
-            putchar(character);
+            printf("%c", character);
             continue;
         }
 
@@ -217,9 +207,20 @@ int main() {
         }
 
         // Salida del caracter cifrado
-        putchar(alpha[index]);
+        printf("%c", alpha[index]);
+        output[pos] = alpha[index];
     }
 
-    putchar('\n');  // Salto de linea al final
-    return 0;
+    printf("\r\n");  // Salto de linea al final
+
+   while (1) {
+      Board_LED_Toggle(LED_3);
+      delay(100);
+      printf("Salida cifrada es: ");
+      for(int random = 0; random < 11; random++)
+      {
+         printf("%c-", output[random]);
+      }
+      printf("\r\n");
+   }
 }
