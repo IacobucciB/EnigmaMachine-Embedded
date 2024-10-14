@@ -1,3 +1,4 @@
+/*
 #include "board.h"
 
 #define TICKRATE_HZ (1000)
@@ -46,10 +47,6 @@ struct Enigma {
     struct Rotor    rotors[8];
 };
 
-/*
- * Produce a rotor object
- * Setup the correct offset, cipher set and turn overs.
- */
 struct Rotor new_rotor(struct Enigma *machine, int rotornumber, int offset) {
     struct Rotor r;
     r.offset = offset;
@@ -62,10 +59,6 @@ struct Rotor new_rotor(struct Enigma *machine, int rotornumber, int offset) {
     return r;
 }
 
-/*
- * Return the index position of a character inside a string
- * if not found then -1
- **/
 int str_index(const char *str, int character) {
     char *pos;
     int index;
@@ -81,9 +74,6 @@ int str_index(const char *str, int character) {
     return index;
 }
 
-/*
- * Cycle a rotor's offset but keep it in the array.
- */
 void rotor_cycle(struct Rotor *rotor) {
     rotor->offset++;
     rotor->offset = rotor->offset % ROTATE;
@@ -94,10 +84,6 @@ void rotor_cycle(struct Rotor *rotor) {
     }
 }
 
-/*
- * Pass through a rotor, right to left, cipher to alpha.
- * returns the exit index location.
- */
 int rotor_forward(struct Rotor *rotor, int index) {
 
     // In the cipher side, out the alpha side
@@ -108,10 +94,6 @@ int rotor_forward(struct Rotor *rotor, int index) {
     return index;
 }
 
-/*
- * Pass through a rotor, left to right, alpha to cipher.
- * returns the exit index location.
- */
 int rotor_reverse(struct Rotor *rotor, int index) {
 
     // In the cipher side, out the alpha side
@@ -122,10 +104,6 @@ int rotor_reverse(struct Rotor *rotor, int index) {
     return index;
 
 }
-
-/*
- * Run the enigma machine
- **/
 
 void SysTick_Handler(void) {
    tick_ct++;
@@ -224,3 +202,4 @@ int main(void) {
       printf("\r\n");
    }
 }
+*/

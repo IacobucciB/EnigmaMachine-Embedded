@@ -2,6 +2,9 @@
 
 #define TICKRATE_HZ (1000)
 
+
+#include "my_program.h"
+
 static volatile uint32_t tick_ct = 0;
 
 void SysTick_Handler(void) {
@@ -19,9 +22,11 @@ int main(void) {
    Board_Init();
    SysTick_Config(SystemCoreClock / TICKRATE_HZ);
 
-   while (1) {
-       Board_LED_Toggle(LED_3);
-       delay(100);
-       printf("Hola mundo at %d\r\n", tick_ct);
+   while (1) 
+   {
+      Board_LED_Toggle(LED_3);
+      delay(100);
+      printf("Hola mundo at %d\r\n", tick_ct);
+      hello();
    }
 }
