@@ -2,8 +2,7 @@
 
 #define TICKRATE_HZ (1000)
 
-
-#include "my_program.h"
+#include "enigma.h"
 
 static volatile uint32_t tick_ct = 0;
 
@@ -21,12 +20,14 @@ int main(void) {
    SystemCoreClockUpdate();
    Board_Init();
    SysTick_Config(SystemCoreClock / TICKRATE_HZ);
-
-   while (1) 
-   {
-      Board_LED_Toggle(LED_3);
-      delay(100);
-      printf("Hola mundo at %d\r\n", tick_ct);
-      hello();
+   enigma_init(3,2,1,0,0,0);
+   char out = encrypt_char('a');
+   
+   while (1) {
+       Board_LED_Toggle(LED_3);
+       delay(100);
+       printf("Hola mundo at %d\r\n", tick_ct);
+      
+      printf("Letra encriptada: %c\n",out);
    }
 }
