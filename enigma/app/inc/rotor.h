@@ -4,12 +4,12 @@
 #include <chip.h>
 
 // Definiciones para los pines del encoder
-#define ENCODER_PIN_A_PORT 0
-#define ENCODER_PIN_A_PIN  4  // Ajustar según la conexión real
-#define ENCODER_PIN_B_PORT 0
-#define ENCODER_PIN_B_PIN  5  // Ajustar según la conexión real
-#define ENCODER_BUTTON_PORT 0
-#define ENCODER_BUTTON_PIN  6  // Ajustar según la conexión real
+#define ENCODER_PIN_A_PORT 2
+#define ENCODER_PIN_A_PIN  6  // Ajustar según la conexión real
+#define ENCODER_PIN_B_PORT 3
+#define ENCODER_PIN_B_PIN  3  // Ajustar según la conexión real
+#define ENCODER_BUTTON_PORT 2
+#define ENCODER_BUTTON_PIN  8  // Ajustar según la conexión real
 
 // Estados del encoder
 typedef enum {

@@ -26,28 +26,27 @@ int main(void) {
    char out = encrypt_char('a');
    
    RotaryEncoder_Init();
-   int rotor = 0;
+   int rotor = 20;
    
    while (1) {
        Board_LED_Toggle(LED_2);
-       delay(100);
-      EncoderState_t state = RotaryEncoder_Read();
+       delay(10);
+       EncoderState_t state = RotaryEncoder_Read();
         if (state == ENCODER_CLOCKWISE) {
             // Acción para el giro en sentido horario
            rotor++;
         } else if (state == ENCODER_COUNTERCLOCKWISE) {
             // Acción para el giro en sentido antihorario
             rotor--;
-         }
+        }
+      
+      printf("Hola mundo at %d\r\n", tick_ct);
+      printf("Direccion: %d\n",rotor);
 
-        if (RotaryEncoder_ButtonPressed()) {
+      if (RotaryEncoder_ButtonPressed()) {
             // Acción cuando se presiona el botón
-        
-            printf("Hola mundo at %d\r\n", tick_ct);
       
             printf("Letra encriptada: %c\n",out);
-            printf("Letra encriptada: %d\n",rotor);
-
-         }
+      }
    }
 }

@@ -5,13 +5,13 @@
 // Inicialización del Rotary Encoder
 void RotaryEncoder_Init(void) {
     // Configuración de los pines del encoder como entradas
-    Chip_SCU_PinMux(1, 0, SCU_MODE_INACT | SCU_MODE_INBUFF_EN, SCU_MODE_FUNC0);  // Configuración para pin A
+    Chip_SCU_PinMux(4, 6, SCU_MODE_PULLUP | SCU_MODE_INBUFF_EN, SCU_MODE_FUNC0);  // Configuración para pin A
     Chip_GPIO_SetDir(LPC_GPIO_PORT, ENCODER_PIN_A_PORT, (1 << ENCODER_PIN_A_PIN), 0);
 
-    Chip_SCU_PinMux(1, 1, SCU_MODE_INACT | SCU_MODE_INBUFF_EN, SCU_MODE_FUNC0);  // Configuración para pin B
+    Chip_SCU_PinMux(6, 4, SCU_MODE_PULLUP | SCU_MODE_INBUFF_EN, SCU_MODE_FUNC0);  // Configuración para pin B
     Chip_GPIO_SetDir(LPC_GPIO_PORT, ENCODER_PIN_B_PORT, (1 << ENCODER_PIN_B_PIN), 0);
 
-    Chip_SCU_PinMux(1, 2, SCU_MODE_INACT | SCU_MODE_INBUFF_EN, SCU_MODE_FUNC0);  // Configuración para botón
+    Chip_SCU_PinMux(6, 12, SCU_MODE_PULLUP | SCU_MODE_INBUFF_EN, SCU_MODE_FUNC0);  // Configuración para botón
     Chip_GPIO_SetDir(LPC_GPIO_PORT, ENCODER_BUTTON_PORT, (1 << ENCODER_BUTTON_PIN), 0);
 }
 

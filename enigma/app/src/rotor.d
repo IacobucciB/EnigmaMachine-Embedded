@@ -31,4 +31,5 @@ app/src/rotor.o: app/src/rotor.c lpc_board_ciaa_edu_4337/inc/board.h \
  lpc_chip_43xx/inc/wwdt_18xx_43xx.h lpc_chip_43xx/inc/romapi_18xx_43xx.h \
  lpc_chip_43xx/inc/iap_18xx_43xx.h lpc_chip_43xx/inc/error.h \
  lpc_chip_43xx/inc/i2cm_18xx_43xx.h lpc_chip_43xx/inc/fpu_init.h \
- lpc_board_ciaa_edu_4337/inc/board_api.h lpc_chip_43xx/inc/lpc_types.h
+ lpc_board_ciaa_edu_4337/inc/board_api.h lpc_chip_43xx/inc/lpc_types.h \
+ app/inc/rotor.h
