@@ -24,4 +24,8 @@ EncoderState_t RotaryEncoder_Read(void);
 // Lee el estado del pulsador del encoder
 bool_t RotaryEncoder_ButtonPressed(void);
 
+// Funciones para detectar cambios en los pines A y B
+bool_t RotaryEncoder_ChangeDetectedA(void);
+bool_t RotaryEncoder_ChangeDetectedB(void);
+
 #endif /*__ROTOR_H_*/

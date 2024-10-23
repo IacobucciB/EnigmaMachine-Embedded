@@ -36,7 +36,18 @@ int main( void )
    while( true ) {
       gpioToggle(LED);
       delay(10);
+      // Detectar cambios en A y B para depuración
+      if (RotaryEncoder_ChangeDetectedA()) {
+         printf("Cambio detectado en A\r\n");
+         rotor++;
+      }
+      if (RotaryEncoder_ChangeDetectedB()) {
+         printf("Cambio detectado en B\r\n");
+         rotor--;
+      }
+    
       EncoderState_t state = RotaryEncoder_Read();
+      /*
       if (state == ENCODER_CLOCKWISE) {
          // Acción para el giro en sentido horario
          rotor++;
@@ -44,11 +55,11 @@ int main( void )
          // Acción para el giro en sentido antihorario
          rotor--;
       }
-      
-      printf("Direccion: %d \r\n",rotor);
+      */
+      //printf("Direccion: %d \r\n",rotor);
 
       if (RotaryEncoder_ButtonPressed()) {
-         printf("Letra encriptada: %c\n",out);
+         //printf("Letra encriptada: %c\n",out);
       }
    }
 
