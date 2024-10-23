@@ -35,7 +35,7 @@ int main( void )
    // ----- Repeat for ever -------------------------
    while( true ) {
       gpioToggle(LED);
-      delay(900);
+      delay(10);
       EncoderState_t state = RotaryEncoder_Read();
       if (state == ENCODER_CLOCKWISE) {
          // Acción para el giro en sentido horario
@@ -44,7 +44,12 @@ int main( void )
          // Acción para el giro en sentido antihorario
          rotor--;
       }
-      printf("Letra encriptada: %c\n",out);
+      
+      printf("Direccion: %d \r\n",rotor);
+
+      if (RotaryEncoder_ButtonPressed()) {
+         printf("Letra encriptada: %c\n",out);
+      }
    }
 
    // YOU NEVER REACH HERE, because this program runs directly or on a
