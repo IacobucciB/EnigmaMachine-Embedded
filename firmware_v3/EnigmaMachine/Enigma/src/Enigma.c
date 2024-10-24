@@ -23,7 +23,7 @@ void send_ps2_command(uint8_t command);
 
 uint8_t read_ps2_response(void);
 
-uint8_t ps2_read_byte(void);
+uint8_t readKey(void);
 
 uint8_t keycode_to_char(uint8_t keycode);
 
@@ -41,14 +41,16 @@ int main( void )
    delayInaccurateUs(60);  // Espera 60 microsegundos
 
    uint8_t key; // alamacenar la tecla leída
-
+   
+   uint8_t readPin = 1;
    // ---------- REPETIR POR SIEMPRE --------------------------
    while( TRUE ) {
-        key = gpioRead(PS2_CLK);
-        
-        printf("información recibida: %#04x\r\n", key);
-        printf("hola\r\n");
-       delay(100); 
+        key = readKey();
+     
+        printf("Valor de PIN: %#04x\r\n", key);
+
+        delay(100);
+       //printf("información recibida: %#04x\r\n", key);
    }   
    // NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa se ejecuta
    // directamenteno sobre un microcontroladore y no es llamado por ningun
@@ -101,6 +103,17 @@ void send_ps2_command(uint8_t command) {
     delayInaccurateUs(100);  // Espera    
 }
 
+
+
+//Paridad Impar 
+/*
+Bit de Start, 
+8 bits 
+bit de paridad
+bit de stop
+
+Envia F0 al finalizar la trama indicando que se soltó una tecla
+*/
 // Función para leer la respuesta del teclado PS/2 (ej. ACK 0xFA)
 uint8_t read_ps2_response(void) {
     uint8_t response = 0;
@@ -128,33 +141,77 @@ uint8_t read_ps2_response(void) {
 
 
 // Función para leer un byte desde el teclado PS/2
-uint8_t ps2_read_byte(void) {
+
+/*
+uint8_t readKey(void) {
     uint8_t data = 0;
-
     // Esperar hasta que el reloj esté bajo (inicio de la transmisión)
-    while (gpioRead(PS2_CLK) == 1);
-    
+    while (gpioRead(PS2_DAT) == HIGH);
+    while (gpioRead(PS2_CLK) == HIGH);
+       
     // Ignorar el bit de inicio (se envía un '0')
-    while (gpioRead(PS2_CLK) == 0);  // Esperar hasta que el reloj esté alto
-    while (gpioRead(PS2_CLK) == 1); // Esperar hasta que el reloj esté bajo
 
-    // Leer los 8 bits de datos
     for (int i = 0; i < 8; i++) {
-        while (gpioRead(PS2_CLK) == 0);  // Esperar hasta que el reloj esté alto
+        delayInaccurateMs(60);
         data |= (gpioRead(PS2_DAT) << i);   // Leer el bit de datos
-        while (gpioRead(PS2_CLK) == 1); // Esperar hasta que el reloj esté bajo
+        printf("Información leída: %#04x\r\n",data);
     }
 
     // Leer el bit de paridad (opcional para verificación)
-    while (gpioRead(PS2_CLK) == 0);  // Esperar hasta que el reloj esté alto
-    while (gpioRead(PS2_CLK) == 1); // Esperar hasta que el reloj esté bajo
+    while (gpioRead(PS2_CLK) == HIGH);  // Esperar hasta que el reloj esté alto
+    while (gpioRead(PS2_CLK) == LOW); // Esperar hasta que el reloj esté bajo
 
     // Leer el bit de parada (se envía un '1')
-    while (gpioRead(PS2_CLK) == 0);  // Esperar hasta que el reloj esté alto
-    while (gpioRead(PS2_CLK) == 1); // Esperar hasta que el reloj esté bajo
+    while (gpioRead(PS2_CLK) == HIGH);  // Esperar hasta que el reloj esté alto
+    while (gpioRead(PS2_CLK) == LOW); // Esperar hasta que el reloj esté bajo
    
 
     // Retornar el byte leído
     return data;
 }
 
+*/
+
+
+uint8_t readKey() {
+    uint8_t data = 0;
+    int parity = 0;
+
+    // Esperar a que la línea de clock baje para el primer bit de start
+    while (gpioRead(PS2_CLK) == 1);
+
+    delayInaccurateUs(15);
+    
+    // Bit de start, que debe ser 0
+    if (gpioRead(PS2_DAT) != 0) {
+        return 0xFF;  // Error en el bit de start
+    }
+
+    // Leer los 8 bits de datos
+    for (int i = 0; i < 8; i++) {
+        printf("primer dato");
+        // Esperar a que el reloj suba y luego baje
+        while (gpioRead(PS2_CLK) == 1);
+        delayInaccurateUs(15);  // Asegurar estar en el centro del pulso
+        data |= (gpioRead(PS2_DAT) << i);  // Leer el bit de datos
+        parity ^= gpioRead(PS2_DAT);  // Calcular la paridad
+        while (gpioRead(PS2_CLK) == 0);
+    }
+
+    // Leer el bit de paridad
+    while (gpioRead(PS2_CLK) == 1);
+    int parity_bit = gpioRead(PS2_DAT);
+    if (parity_bit == parity) {
+        return 0xFF;  // Error en la paridad
+    }
+    while (gpioRead(PS2_CLK) == 0);
+
+    // Leer el bit de stop, que debe ser 1
+    while (gpioRead(PS2_CLK) == 1);
+    if (gpioRead(PS2_DAT) != 1) {
+        return 0xFF;  // Error en el bit de stop
+    }
+    while (gpioRead(PS2_CLK) == 0);
+
+    return data;  // Retornar el byte de datos leído
+}
