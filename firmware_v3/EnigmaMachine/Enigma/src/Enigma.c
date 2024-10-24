@@ -37,16 +37,17 @@ int main( void )
    
     // Inicializar la EDU-CIAA y los pines para PS/2
     ps2_init();
-   
+    
+   delayInaccurateUs(60);  // Espera 60 microsegundos
+
    uint8_t key; // alamacenar la tecla leída
 
    // ---------- REPETIR POR SIEMPRE --------------------------
    while( TRUE ) {
-        // Leer la tecla
-        key = ps2_read_byte();
-        if (key != 0) {
-           printf("información recibida: %c\r\n", key);
-        }
+        key = gpioRead(PS2_CLK);
+        
+        printf("información recibida: %#04x\r\n", key);
+        printf("hola\r\n");
        delay(100); 
    }   
    // NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa se ejecuta
