@@ -6,7 +6,7 @@
  (resolution mm 100000)
  (unit mm)
  (structure
-  (boundary (rect pcb -10.10160 -10.10160 76.10160 127.62560))
+  (boundary (rect pcb -10.10160 -10.10160 76.10160 127.10160))
   (boundary (path signal 0.20320 -10.00000 -10.00000 76.00000 -10.00000 76.00000 127.00000
    -10.00000 127.00000 -10.00000 -10.00000))
   (flip_style mirror_first)
@@ -52,11 +52,11 @@
  )
  (placement
   (component MALE_PIN_HEADER_J3 (place J3 -3.24000 63.14250 front 0))
-  (component PS2_FEMALE_VF_J1 (place J1 1.10000 117.50000 front 0))
-  (component "CONN-SIL5_J7" (place J7 -0.70000 99.08000 front 270))
-  (component "CONN-SIL5_J12" (place J12 60.30000 97.90000 front -180))
-  (component CON40_2X20_US_FCI_J2 (place J2 32.76000 38.74000 front 270))
+  (component PS2_FEMALE_VF_J1 (place J1 69.10000 115.50000 front 0))
+  (component "CONN-SIL5_J7" (place J7 3.14000 124.30000 front 180))
+  (component "CONN-SIL5_J12" (place J12 57.68000 -4.80000 front -180))
   (component MALE_HEADER_DUALROW_2X7_J4 (place J4 67.25000 25.40000 front 0))
+  (component CON40_2X20_US_FCI_J2 (place J2 30.70000 56.50000 front 270))
  )
  (library
   (image MALE_PIN_HEADER_J3 (side front)
@@ -128,65 +128,65 @@
    (pin PS3 (rotate 0) 3 7.62000 0.00000)
    (pin PS3 (rotate 0) 4 10.16000 0.00000)
   )
-  (image CON40_2X20_US_FCI_J2 (side front)
-   (outline (rect TOP -28.01620 -2.54000 30.55620 4.90220))
-   (pin PS4 (rotate -90) 0 -22.86000 0.00000)
-   (pin PS4 (rotate -90) 1 -22.86000 2.54000)
-   (pin PS4 (rotate -90) 2 -20.32000 0.00000)
-   (pin PS4 (rotate -90) 3 -20.32000 2.54000)
-   (pin PS4 (rotate -90) 4 -17.78000 0.00000)
-   (pin PS4 (rotate -90) 5 -17.78000 2.54000)
-   (pin PS4 (rotate -90) 6 -15.24000 0.00000)
-   (pin PS4 (rotate -90) 7 -15.24000 2.54000)
-   (pin PS4 (rotate -90) 8 -12.70000 0.00000)
-   (pin PS4 (rotate -90) 9 -12.70000 2.54000)
-   (pin PS4 (rotate -90) 10 -10.16000 0.00000)
-   (pin PS4 (rotate -90) 11 -10.16000 2.54000)
-   (pin PS4 (rotate -90) 12 -7.62000 0.00000)
-   (pin PS4 (rotate -90) 13 -7.62000 2.54000)
-   (pin PS4 (rotate -90) 14 -5.08000 0.00000)
-   (pin PS4 (rotate -90) 15 -5.08000 2.54000)
-   (pin PS4 (rotate -90) 16 -2.54000 0.00000)
-   (pin PS4 (rotate -90) 17 -2.54000 2.54000)
-   (pin PS4 (rotate -90) 18 0.00000 0.00000)
-   (pin PS4 (rotate -90) 19 0.00000 2.54000)
-   (pin PS4 (rotate -90) 20 2.54000 0.00000)
-   (pin PS4 (rotate -90) 21 2.54000 2.54000)
-   (pin PS4 (rotate -90) 22 5.08000 0.00000)
-   (pin PS4 (rotate -90) 23 5.08000 2.54000)
-   (pin PS4 (rotate -90) 24 7.62000 0.00000)
-   (pin PS4 (rotate -90) 25 7.62000 2.54000)
-   (pin PS4 (rotate -90) 26 10.16000 0.00000)
-   (pin PS4 (rotate -90) 27 10.16000 2.54000)
-   (pin PS4 (rotate -90) 28 12.70000 0.00000)
-   (pin PS4 (rotate -90) 29 12.70000 2.54000)
-   (pin PS4 (rotate -90) 30 15.24000 0.00000)
-   (pin PS4 (rotate -90) 31 15.24000 2.54000)
-   (pin PS4 (rotate -90) 32 17.78000 0.00000)
-   (pin PS4 (rotate -90) 33 17.78000 2.54000)
-   (pin PS4 (rotate -90) 34 20.32000 0.00000)
-   (pin PS4 (rotate -90) 35 20.32000 2.54000)
-   (pin PS4 (rotate -90) 36 22.86000 0.00000)
-   (pin PS4 (rotate -90) 37 22.86000 2.54000)
-   (pin PS4 (rotate -90) 38 25.40000 0.00000)
-   (pin PS4 (rotate -90) 39 25.40000 2.54000)
-  )
   (image MALE_HEADER_DUALROW_2X7_J4 (side front)
    (outline (rect TOP -1.15160 -11.40160 3.15160 3.30160))
-   (pin PS5 (rotate -90) 0 0.00000 2.00000)
-   (pin PS5 (rotate -90) 1 2.00000 2.00000)
-   (pin PS5 (rotate -90) 2 0.00000 0.00000)
-   (pin PS5 (rotate -90) 3 2.00000 0.00000)
-   (pin PS5 (rotate -90) 4 0.00000 -2.00000)
-   (pin PS5 (rotate -90) 5 2.00000 -2.00000)
-   (pin PS5 (rotate -90) 6 0.00000 -4.00000)
-   (pin PS5 (rotate -90) 7 2.00000 -4.00000)
-   (pin PS5 (rotate -90) 8 0.00000 -6.00000)
-   (pin PS5 (rotate -90) 9 2.00000 -6.00000)
-   (pin PS5 (rotate -90) 10 0.00000 -8.00000)
-   (pin PS5 (rotate -90) 11 2.00000 -8.00000)
-   (pin PS5 (rotate -90) 12 0.00000 -10.00000)
-   (pin PS5 (rotate -90) 13 2.00000 -10.00000)
+   (pin PS4 (rotate -90) 0 0.00000 2.00000)
+   (pin PS4 (rotate -90) 1 2.00000 2.00000)
+   (pin PS4 (rotate -90) 2 0.00000 0.00000)
+   (pin PS4 (rotate -90) 3 2.00000 0.00000)
+   (pin PS4 (rotate -90) 4 0.00000 -2.00000)
+   (pin PS4 (rotate -90) 5 2.00000 -2.00000)
+   (pin PS4 (rotate -90) 6 0.00000 -4.00000)
+   (pin PS4 (rotate -90) 7 2.00000 -4.00000)
+   (pin PS4 (rotate -90) 8 0.00000 -6.00000)
+   (pin PS4 (rotate -90) 9 2.00000 -6.00000)
+   (pin PS4 (rotate -90) 10 0.00000 -8.00000)
+   (pin PS4 (rotate -90) 11 2.00000 -8.00000)
+   (pin PS4 (rotate -90) 12 0.00000 -10.00000)
+   (pin PS4 (rotate -90) 13 2.00000 -10.00000)
+  )
+  (image CON40_2X20_US_FCI_J2 (side front)
+   (outline (rect TOP -28.01620 -2.54000 30.55620 4.90220))
+   (pin PS5 (rotate -90) 0 -22.86000 0.00000)
+   (pin PS5 (rotate -90) 1 -22.86000 2.54000)
+   (pin PS5 (rotate -90) 2 -20.32000 0.00000)
+   (pin PS5 (rotate -90) 3 -20.32000 2.54000)
+   (pin PS5 (rotate -90) 4 -17.78000 0.00000)
+   (pin PS5 (rotate -90) 5 -17.78000 2.54000)
+   (pin PS5 (rotate -90) 6 -15.24000 0.00000)
+   (pin PS5 (rotate -90) 7 -15.24000 2.54000)
+   (pin PS5 (rotate -90) 8 -12.70000 0.00000)
+   (pin PS5 (rotate -90) 9 -12.70000 2.54000)
+   (pin PS5 (rotate -90) 10 -10.16000 0.00000)
+   (pin PS5 (rotate -90) 11 -10.16000 2.54000)
+   (pin PS5 (rotate -90) 12 -7.62000 0.00000)
+   (pin PS5 (rotate -90) 13 -7.62000 2.54000)
+   (pin PS5 (rotate -90) 14 -5.08000 0.00000)
+   (pin PS5 (rotate -90) 15 -5.08000 2.54000)
+   (pin PS5 (rotate -90) 16 -2.54000 0.00000)
+   (pin PS5 (rotate -90) 17 -2.54000 2.54000)
+   (pin PS5 (rotate -90) 18 0.00000 0.00000)
+   (pin PS5 (rotate -90) 19 0.00000 2.54000)
+   (pin PS5 (rotate -90) 20 2.54000 0.00000)
+   (pin PS5 (rotate -90) 21 2.54000 2.54000)
+   (pin PS5 (rotate -90) 22 5.08000 0.00000)
+   (pin PS5 (rotate -90) 23 5.08000 2.54000)
+   (pin PS5 (rotate -90) 24 7.62000 0.00000)
+   (pin PS5 (rotate -90) 25 7.62000 2.54000)
+   (pin PS5 (rotate -90) 26 10.16000 0.00000)
+   (pin PS5 (rotate -90) 27 10.16000 2.54000)
+   (pin PS5 (rotate -90) 28 12.70000 0.00000)
+   (pin PS5 (rotate -90) 29 12.70000 2.54000)
+   (pin PS5 (rotate -90) 30 15.24000 0.00000)
+   (pin PS5 (rotate -90) 31 15.24000 2.54000)
+   (pin PS5 (rotate -90) 32 17.78000 0.00000)
+   (pin PS5 (rotate -90) 33 17.78000 2.54000)
+   (pin PS5 (rotate -90) 34 20.32000 0.00000)
+   (pin PS5 (rotate -90) 35 20.32000 2.54000)
+   (pin PS5 (rotate -90) 36 22.86000 0.00000)
+   (pin PS5 (rotate -90) 37 22.86000 2.54000)
+   (pin PS5 (rotate -90) 38 25.40000 0.00000)
+   (pin PS5 (rotate -90) 39 25.40000 2.54000)
   )
   (padstack PS0 (absolute on)
    (shape (circle TOP 1.52400 0 0))
@@ -261,12 +261,12 @@
    (shape (rect BOT -1.01600 -1.01600 1.01600 1.01600))
   )
   (padstack PS4 (absolute on)
-   (shape (circle TOP 1.52400 0 0))
-   (shape (circle BOT 1.52400 0 0))
-  )
-  (padstack PS5 (absolute on)
    (shape (circle TOP 1.39700 0 0))
    (shape (circle BOT 1.39700 0 0))
+  )
+  (padstack PS5 (absolute on)
+   (shape (circle TOP 1.52400 0 0))
+   (shape (circle BOT 1.52400 0 0))
   )
   (padstack $VIA#0_SIGNAL (absolute on)
    (shape (circle TOP 0.76200 0 0))
@@ -367,7 +367,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-3 J2-3)
+   (pins J3-3 J2-0)
   )
   (net "PLUGBOARD[B]"
    (circuit
@@ -376,7 +376,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-5 J2-5)
+   (pins J3-5 J2-2)
   )
   (net "PLUGBOARD[C]"
    (circuit
@@ -385,7 +385,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-7 J2-7)
+   (pins J3-7 J2-4)
   )
   (net "PLUGBOARD[D]"
    (circuit
@@ -394,7 +394,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-9 J2-9)
+   (pins J3-9 J2-6)
   )
   (net "PLUGBOARD[E]"
    (circuit
@@ -403,7 +403,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-11 J2-11)
+   (pins J3-11 J2-8)
   )
   (net "PLUGBOARD[F]"
    (circuit
@@ -412,7 +412,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-13 J2-13)
+   (pins J3-13 J2-10)
   )
   (net "PLUGBOARD[G]"
    (circuit
@@ -421,7 +421,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-15 J2-15)
+   (pins J3-15 J2-12)
   )
   (net "PLUGBOARD[H]"
    (circuit
@@ -430,7 +430,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J2-17 J4-10)
+   (pins J4-10 J2-21)
   )
   (net "PLUGBOARD[I]"
    (circuit
@@ -439,7 +439,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-8 J2-8)
+   (pins J3-8 J2-1)
   )
   (net "PLUGBOARD[J]"
    (circuit
@@ -448,7 +448,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J2-20 J4-8)
+   (pins J4-8 J2-37)
   )
   (net "PLUGBOARD[K]"
    (circuit
@@ -457,7 +457,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-22 J2-22)
+   (pins J3-22 J2-39)
   )
   (net "PLUGBOARD[L]"
    (circuit
@@ -466,7 +466,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-21 J2-21)
+   (pins J3-21 J2-20)
   )
   (net "PLUGBOARD[M]"
    (circuit
@@ -475,7 +475,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-23 J2-23)
+   (pins J3-23 J2-22)
   )
   (net "PLUGBOARD[N]"
    (circuit
@@ -484,7 +484,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-25 J2-25)
+   (pins J3-25 J2-24)
   )
   (net "PLUGBOARD[O]"
    (circuit
@@ -493,7 +493,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-27 J2-27)
+   (pins J3-27 J2-26)
   )
   (net "PLUGBOARD[P]"
    (circuit
@@ -502,7 +502,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-29 J2-29)
+   (pins J3-29 J2-28)
   )
   (net "PLUGBOARD[Q]"
    (circuit
@@ -511,7 +511,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-31 J2-31)
+   (pins J3-31 J2-30)
   )
   (net "PLUGBOARD[R]"
    (circuit
@@ -520,7 +520,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-33 J2-33)
+   (pins J3-33 J2-32)
   )
   (net "PLUGBOARD[S]"
    (circuit
@@ -529,7 +529,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-35 J2-35)
+   (pins J3-35 J2-34)
   )
   (net "PLUGBOARD[T]"
    (circuit
@@ -538,7 +538,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-37 J2-37)
+   (pins J3-37 J2-36)
   )
   (net "PLUGBOARD[U]"
    (circuit
@@ -547,7 +547,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-39 J2-39)
+   (pins J3-39 J2-38)
   )
   (net "PLUGBOARD[V]"
    (circuit
@@ -556,7 +556,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-28 J2-28)
+   (pins J3-28 J2-27)
   )
   (net "PLUGBOARD[W]"
    (circuit
@@ -565,7 +565,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-30 J2-30)
+   (pins J3-30 J2-29)
   )
   (net "PLUGBOARD[X]"
    (circuit
@@ -574,7 +574,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-32 J2-32)
+   (pins J3-32 J2-31)
   )
   (net "PLUGBOARD[Y]"
    (circuit
@@ -583,7 +583,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J3-34 J2-34)
+   (pins J3-34 J2-33)
   )
   (net "PLUGBOARD[Z]"
    (circuit
@@ -592,7 +592,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J2-36 J4-0)
+   (pins J4-0 J2-17)
   )
   (net "PS/2-KEYBOARD[CLK]"
    (circuit
