@@ -77,79 +77,95 @@
   )
   )
   (network_out
-   (Net GND_ENCODER 
+   (Net GND 
    (rule
    )
-   (wire (path BOT 76200  8710000 8702000 8710000 6594000 9539000 6594000)
-    (connect (terminal pin J12-4) (terminal pin J6-6))
+   (wire (path BOT 76200  8445500 10922000 10033000 10922000 10033000 7102000
+     9793000 7102000)
+    (connect (terminal wire) (terminal pin J6-3))
    )
+   (wire (path BOT 76200  8445500 9969500 5143500 9969500 5143500 8509000)
+    (connect (terminal wire) (terminal wire))
    )
-   (Net GND_MAX 
-   (rule
+   (wire (path BOT 76200  5143500 8509000 5080000 8509000)
+    (connect (terminal wire) (terminal wire))
    )
-   (wire (path BOT 76200  5706000 8700000 5706000 8953500 2095500 8953500
-     2095500 7102000 2425000 7102000)
-    (connect (terminal pin J7-1) (terminal pin J3-2))
+   (wire (path BOT 76200  8710000 8702000 9144000 8702000 9144000 9969500
+     8445500 9969500)
+    (connect (terminal pin J12-4) (terminal wire))
    )
+   (wire (path BOT 76200  8445500 10922000 8445500 12550000 8630000 12550000)
+    (connect (terminal wire) (terminal pin J1-2))
    )
-   (Net GND_PS2 
-   (rule
+   (wire (path BOT 76200  8445500 10922000 8445500 9969500)
+    (connect (terminal wire) (terminal wire))
    )
-   (wire (path BOT 76200  8630000 12550000 8630000 13208000 10033000 13208000
-     10033000 7102000 9793000 7102000)
-    (connect (terminal pin J1-2) (terminal pin J6-3))
+   (wire (path BOT 76200  5080000 8509000 5016500 8509000)
+    (connect (terminal wire) (terminal wire))
+   )
+   (wire (path BOT 76200  5207000 8509000 5143500 8509000)
+    (connect (terminal wire) (terminal wire))
+   )
+   (wire (path BOT 76200  5706000 8700000 5706000 8482110 5207000 8482110
+     5207000 8509000)
+    (connect (terminal pin J7-1) (terminal wire))
+   )
+   (wire (path BOT 76200  2425000 4308000 1651000 4308000 1651000 8509000
+     5016500 8509000)
+    (connect (terminal pin J3-24) (terminal wire))
    )
    )
    (Net "MATRIX CLK" 
    (rule
    )
-   (wire (path BOT 76200  6468000 8700000 6468000 9334500 1905000 9334500
-     1905000 5578000 2425000 5578000)
-    (connect (terminal pin J7-4) (terminal pin J3-14))
+   (wire (path BOT 76200  2425000 5578000 2032000 5578000 2032000 8128000
+     6468000 8128000 6468000 8700000)
+    (connect (terminal pin J3-14) (terminal pin J7-4))
    )
    )
    (Net "MATRIX DIN" 
    (rule
    )
-   (wire (path BOT 76200  5960000 8700000 5960000 7620000 6477000 7620000
-     6477000 2159000 2159000 2159000 2159000 4816000 2425000 4816000)
+   (wire (path BOT 76200  5960000 8700000 5960000 8318500 1841500 8318500
+     1841500 4816000 2425000 4816000)
     (connect (terminal pin J7-2) (terminal pin J3-20))
    )
    )
    (Net MATRIX_LOAD 
    (rule
    )
-   (wire (path BOT 76200  6214000 8700000 6209000 8700000 6209000 7890000)
-    (connect (terminal pin J7-3) (terminal pin J9-0))
+   (wire (path BOT 76200  6209000 7890000 6731000 7890000 6731000 8953500
+     6214000 8953500 6214000 8700000)
+    (connect (terminal pin J9-0) (terminal pin J7-3))
    )
    )
    (Net MATRIX_LOAD_1 
    (rule
    )
-   (wire (path BOT 76200  6209000 7300000 5235883 7300000 5235883 7102000
-     2679000 7102000)
+   (wire (path BOT 76200  6209000 7300000 6011000 7102000 2679000 7102000)
     (connect (terminal pin J8-0) (terminal pin J3-3))
+    (type protect)
    )
    )
    (Net "PLUGBOARD[A]" 
    (rule
    )
-   (wire (path BOT 76200  4250000 6460000 4250000 6848000 2679000 6848000)
-    (connect (terminal pin J2-0) (terminal pin J3-5))
+   (wire (path BOT 76200  2679000 6848000 4250000 6848000 4250000 6460000)
+    (connect (terminal pin J3-5) (terminal pin J2-0))
    )
    )
    (Net "PLUGBOARD[B]" 
    (rule
    )
-   (wire (path BOT 76200  2679000 6594000 3810000 6594000 3810000 6206000
-     4250000 6206000)
-    (connect (terminal pin J3-7) (terminal pin J2-1))
+   (wire (path BOT 76200  4250000 6206000 3873500 6206000 3873500 6594000
+     2679000 6594000)
+    (connect (terminal pin J2-1) (terminal pin J3-7))
    )
    )
    (Net "PLUGBOARD[C]" 
    (rule
    )
-   (wire (path BOT 76200  4250000 5952000 3619500 5952000 3619500 6340000
+   (wire (path BOT 76200  4250000 5952000 3683000 5952000 3683000 6340000
      2679000 6340000)
     (connect (terminal pin J2-2) (terminal pin J3-9))
    )
@@ -157,31 +173,31 @@
    (Net "PLUGBOARD[D]" 
    (rule
    )
-   (wire (path BOT 76200  2679000 6086000 3460750 6086000 3460750 5715000
-     3492500 5715000 3492500 5698000 4250000 5698000)
-    (connect (terminal pin J3-11) (terminal pin J2-3))
+   (wire (path BOT 76200  4250000 5698000 3492500 5698000 3492500 6086000
+     2679000 6086000)
+    (connect (terminal pin J2-3) (terminal pin J3-11))
    )
    )
    (Net "PLUGBOARD[E]" 
    (rule
    )
-   (wire (path BOT 76200  2679000 5832000 3302000 5832000 3302000 5444000
-     4250000 5444000)
-    (connect (terminal pin J3-13) (terminal pin J2-4))
+   (wire (path BOT 76200  4250000 5444000 3302000 5444000 3302000 5832000
+     2679000 5832000)
+    (connect (terminal pin J2-4) (terminal pin J3-13))
    )
    )
    (Net "PLUGBOARD[F]" 
    (rule
    )
-   (wire (path BOT 76200  2679000 5578000 3111500 5578000 3111500 5190000
-     4250000 5190000)
-    (connect (terminal pin J3-15) (terminal pin J2-5))
+   (wire (path BOT 76200  4250000 5190000 3111500 5190000 3111500 5578000
+     2679000 5578000)
+    (connect (terminal pin J2-5) (terminal pin J3-15))
    )
    )
    (Net "PLUGBOARD[G]" 
    (rule
    )
-   (wire (path BOT 76200  4250000 4936000 3810000 4936000 3810000 5016500
+   (wire (path BOT 76200  4250000 4936000 3685766 4936000 3685766 5016500
      2921000 5016500 2921000 5324000 2679000 5324000)
     (connect (terminal pin J2-6) (terminal pin J3-17))
    )
@@ -189,71 +205,71 @@
    (Net "PLUGBOARD[H]" 
    (rule
    )
-   (wire (path BOT 76200  2679000 4816000 3619500 4816000 3619500 4682000
-     4250000 4682000)
-    (connect (terminal pin J3-21) (terminal pin J2-7))
+   (wire (path BOT 76200  4250000 4682000 3111500 4682000 3111500 4816000
+     2679000 4816000)
+    (connect (terminal pin J2-7) (terminal pin J3-21))
    )
    )
    (Net "PLUGBOARD[I]" 
    (rule
    )
-   (wire (path BOT 76200  4250000 4428000 3429000 4428000 3429000 4562000
-     2679000 4562000)
+   (wire (path BOT 76200  4250000 4428000 3810000 4428000 3810000 4508500
+     2921000 4508500 2921000 4562000 2679000 4562000)
     (connect (terminal pin J2-8) (terminal pin J3-23))
    )
    )
    (Net "PLUGBOARD[J]" 
    (rule
    )
-   (wire (path BOT 76200  6060000 6350000 4508500 6350000 4508500 4064000
-     3238500 4064000 3238500 4308000 2679000 4308000)
+   (wire (path BOT 76200  5960000 6350000 4508500 6350000 4508500 4191000
+     3272975 4191000 3272975 4308000 2679000 4308000)
     (connect (terminal pin J10-0) (terminal pin J3-25))
    )
    )
    (Net "PLUGBOARD[K]" 
    (rule
    )
-   (wire (path BOT 76200  6060000 6096000 4699000 6096000 4699000 3873500
-     3048000 3873500 3048000 4054000 2679000 4054000)
+   (wire (path BOT 76200  5960000 6096000 4667250 6096000 4667250 4017099
+     2679000 4017099 2679000 4054000)
     (connect (terminal pin J10-1) (terminal pin J3-27))
    )
    )
    (Net "PLUGBOARD[L]" 
    (rule
    )
-   (wire (path BOT 76200  2679000 3800000 2890640 3800000 2890640 3709750
-     4889500 3709750 4889500 5842000 6060000 5842000)
-    (connect (terminal pin J3-29) (terminal pin J10-2))
+   (wire (path BOT 76200  5960000 5842000 4826000 5842000 4826000 3800000
+     2679000 3800000)
+    (connect (terminal pin J10-2) (terminal pin J3-29))
    )
    )
    (Net "PLUGBOARD[M]" 
    (rule
    )
-   (wire (path BOT 76200  2679000 3546000 5080000 3546000 5080000 5588000
-     6060000 5588000)
-    (connect (terminal pin J3-31) (terminal pin J10-3))
+   (wire (path BOT 76200  5960000 5588000 5016500 5588000 5016500 3546000
+     2679000 3546000)
+    (connect (terminal pin J10-3) (terminal pin J3-31))
    )
    )
    (Net "PLUGBOARD[N]" 
    (rule
    )
-   (wire (path BOT 76200  6060000 5334000 5270500 5334000 5270500 3292000
-     2679000 3292000)
+   (wire (path BOT 76200  5960000 5334000 5270500 5334000 5270500 5143500
+     5207000 5143500 5207000 3292000 2679000 3292000)
     (connect (terminal pin J10-4) (terminal pin J3-33))
    )
    )
    (Net "PLUGBOARD[O]" 
    (rule
    )
-   (wire (path BOT 76200  2679000 3038000 5461000 3038000 5461000 5080000
-     6060000 5080000)
-    (connect (terminal pin J3-35) (terminal pin J10-5))
+   (wire (path BOT 76200  5960000 5080000 5461000 5080000 5461000 4984750
+     5397500 4984750 5397500 3038000 2679000 3038000)
+    (connect (terminal pin J10-5) (terminal pin J3-35))
    )
    )
    (Net "PLUGBOARD[P]" 
    (rule
    )
-   (wire (path BOT 76200  6060000 4826000 5651500 4826000 5651500 2784000
+   (wire (path BOT 76200  5960000 4826000 5651500 4826000 5651500 2784000
      2679000 2784000)
     (connect (terminal pin J10-6) (terminal pin J3-37))
    )
@@ -261,122 +277,147 @@
    (Net "PLUGBOARD[Q]" 
    (rule
    )
-   (wire (path BOT 76200  6060000 4572000 6060000 2530000 2679000 2530000)
+   (wire (path BOT 76200  5960000 4572000 5960000 2530000 2679000 2530000)
     (connect (terminal pin J10-7) (terminal pin J3-39))
    )
    )
    (Net "PLUGBOARD[R]" 
    (rule
    )
-   (wire (path BOT 76200  9539000 3800000 8953500 3800000 8953500 5908000
-     7800000 5908000)
+   (wire (path BOT 76200  9539000 3800000 8699500 3800000 8699500 3938000
+     7400000 3938000)
     (connect (terminal pin J6-28) (terminal pin J5-0))
    )
    )
    (Net "PLUGBOARD[S]" 
    (rule
    )
+   (wire (path BOT 76200  7400000 1906000 7175500 1906000 7175500 1714500
+     1778000 1714500 1778000 3546000 2425000 3546000)
+    (connect (terminal pin J5-8) (terminal pin J3-30))
+   )
    )
    (Net "PLUGBOARD[T]" 
    (rule
+   )
+   (wire (path BOT 76200  7400000 2160000 6985000 2160000 6985000 1968500
+     1968500 1968500 1968500 3292000 2425000 3292000)
+    (connect (terminal pin J5-7) (terminal pin J3-32))
    )
    )
    (Net "PLUGBOARD[U]" 
    (rule
    )
+   (wire (path BOT 76200  7400000 2414000 6159500 2414000 6159500 2286000
+     2159000 2286000 2159000 3038000 2425000 3038000)
+    (connect (terminal pin J5-6) (terminal pin J3-34))
+   )
    )
    (Net "PLUGBOARD[V]" 
    (rule
    )
-   (wire (path BOT 76200  9539000 3546000 8763000 3546000 8763000 5654000
-     7800000 5654000)
+   (wire (path BOT 76200  9539000 3546000 8509000 3546000 8509000 3684000
+     7400000 3684000)
     (connect (terminal pin J6-30) (terminal pin J5-1))
    )
    )
    (Net "PLUGBOARD[W]" 
    (rule
    )
-   (wire (path BOT 76200  9539000 3292000 8572500 3292000 8572500 5400000
-     7800000 5400000)
+   (wire (path BOT 76200  9539000 3292000 8191500 3292000 8191500 3430000
+     7400000 3430000)
     (connect (terminal pin J6-32) (terminal pin J5-2))
    )
    )
    (Net "PLUGBOARD[X]" 
    (rule
    )
-   (wire (path BOT 76200  7800000 5146000 8382000 5146000 8382000 3038001
-     8890000 3038001 8890000 3038000 9539000 3038000)
-    (connect (terminal pin J5-3) (terminal pin J6-34))
+   (wire (path BOT 76200  9539000 3038000 8001000 3038000 8001000 3176000
+     7400000 3176000)
+    (connect (terminal pin J6-34) (terminal pin J5-3))
    )
    )
    (Net "PLUGBOARD[Y]" 
    (rule
    )
-   (wire (path BOT 76200  9539000 2784000 8223250 2784000 8223250 4826000
-     8064500 4826000 8064500 4892000 7800000 4892000)
+   (wire (path BOT 76200  9539000 2784000 7810500 2784000 7810500 2922000
+     7400000 2922000)
     (connect (terminal pin J6-36) (terminal pin J5-4))
    )
    )
    (Net "PLUGBOARD[Z]" 
    (rule
    )
-   (wire (path BOT 76200  7800000 4638000 8064500 4638000 8064500 2530000
-     9539000 2530000)
-    (connect (terminal pin J5-5) (terminal pin J6-38))
+   (wire (path BOT 76200  9539000 2530000 7620000 2530000 7620000 2668000
+     7400000 2668000)
+    (connect (terminal pin J6-38) (terminal pin J5-5))
    )
    )
    (Net PS2-CLK 
    (rule
    )
-   (wire (path BOT 76200  9793000 3292000 10200470 3292000 10200470 13398500
-     8255000 13398500 8255000 12300000 8630000 12300000)
-    (connect (terminal pin J6-33) (terminal pin J1-4))
+   (wire (path BOT 76200  8630000 12300000 8630000 11493500 10223500 11493500
+     10223500 3292000 9793000 3292000)
+    (connect (terminal pin J1-4) (terminal pin J6-33))
    )
    )
    (Net PS2-DATA 
    (rule
    )
-   (wire (path BOT 76200  9793000 3038000 10033000 3038000 10033000 2286000
-     7366000 2286000 7366000 10710491 8820000 10710491 8820000 12550000)
+   (wire (path BOT 76200  9793000 3038000 10604500 3038000 10604500 11874500
+     8820000 11874500 8820000 12550000)
     (connect (terminal pin J6-35) (terminal pin J1-0))
    )
    )
    (Net "ROTOR-ENCODER[A]" 
    (rule
    )
+   (wire (path BOT 76200  9539000 4054000 9080500 4054000 9080500 4127500
+     7874000 4127500 7874000 9718000 8710000 9718000)
+    (connect (terminal pin J6-26) (terminal pin J12-0))
+   )
    )
    (Net "ROTOR-ENCODER[B]" 
    (rule
    )
-   (wire (path BOT 76200  9539000 4308000 9144000 4308000 9144000 6286500
-     8445500 6286500 8445500 9464000 8710000 9464000)
-    (connect (terminal pin J6-24) (terminal pin J12-1))
+   (wire (path BOT 76200  8710000 9464000 8064500 9464000 8064500 4308000
+     9539000 4308000)
+    (connect (terminal pin J12-1) (terminal pin J6-24))
    )
    )
    (Net "ROTOR-ENCODER[SWITCH]" 
    (rule
    )
+   (wire (path BOT 76200  9539000 4562000 8255000 4562000 8255000 9210000
+     8710000 9210000)
+    (connect (terminal pin J6-22) (terminal pin J12-2))
+   )
    )
    (Net VCC_ENCODER 
    (rule
    )
-   (wire (path BOT 76200  8710000 8956000 9539000 8956000 9539000 7356000)
+   (wire (path BOT 76200  8710000 8956000 8445500 8956000 8445500 7356000
+     9539000 7356000)
     (connect (terminal pin J12-3) (terminal pin J6-0))
    )
    )
    (Net VCC_MAX 
    (rule
    )
-   (wire (path BOT 76200  5452000 8700000 2679000 8700000 2679000 7356000)
+   (wire (path BOT 76200  5452000 8700000 5452000 9144000 6921500 9144000
+     6921500 7620000 3302000 7620000 3302000 7356000 2679000 7356000)
     (connect (terminal pin J7-0) (terminal pin J3-1))
    )
    )
    (Net VCC_PS2 
    (rule
    )
-   (wire (path BOT 76200  9793000 7356000 9793000 12550000 9310000 12550000)
-    (connect (terminal pin J6-1) (terminal pin J1-3))
+   (wire (path BOT 76200  9310000 12550000 9310000 13398500 8064500 13398500
+     8064500 10367653 9793000 10367653 9793000 7356000)
+    (connect (terminal pin J1-3) (terminal pin J6-1))
    )
+   )
+   (Net {VOID} 
    )
   )
  )

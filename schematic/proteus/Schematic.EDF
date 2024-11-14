@@ -6,11 +6,9 @@
  (resolution mm 100000)
  (unit mm)
  (structure
-  (boundary (rect pcb 17.47300 -0.12700 103.52700 137.12700))
-  (boundary (path signal 0.20320 17.60000 0.00000 103.40000 0.00000 103.40000 137.00000
-   17.60000 137.00000 17.60000 0.00000))
-  (boundary (path signal 0.20320 28.30000 0.00000 92.40000 0.00000 92.40000 15.00000
-   28.30000 15.00000 28.30000 0.00000))
+  (boundary (rect pcb -4.90160 15.49840 145.30160 115.70160))
+  (boundary (path signal 0.20320 145.20000 15.60000 145.20000 115.60000 -4.80000 115.60000
+   -4.80000 15.60000 145.20000 15.60000))
   (flip_style mirror_first)
   (layer TOP (type signal) (direction off))
   (layer I1 (type signal) (direction off))
@@ -38,6 +36,7 @@
    $VIA#0_SIGNAL
    (spare
     $VIA#0_POWER
+    PS5
    )
   )
   (rule
@@ -53,16 +52,14 @@
   )
  )
  (placement
-  (component MALE_PIN_HEADER_2MMX0.7MM_J6 (place J6 95.39000 73.56000 front 0))
-  (component "CONN-SIL5_J7" (place J7 54.52000 87.00000 front 0))
-  (component "CONN-SIL5_J12" (place J12 87.10000 97.18000 front 270))
-  (component PS2_FEMALE_VF_J1 (place J1 88.20000 125.50000 back 0))
-  (component "CONN-SIL1_J8" (place J8 62.09000 73.00000 front 0))
-  (component "CONN-SIL1_J9" (place J9 62.09000 78.90000 front 0))
-  (component "CONN-SIL9-C_2MMX0.7MM_J2" (place J2 42.50000 64.60000 front 0))
-  (component "CONN-SIL8_J10" (place J10 60.60000 63.50000 front -90))
-  (component "CONN-SIL9-C_2MMX0.7MM_J5" (place J5 78.00000 59.08000 front 0))
-  (component MALE_PIN_HEADER_2MMX0.7MM_J3 (place J3 24.25000 73.56000 front 0))
+  (component MALE_PIN_HEADER_2MMX0.7MM_J6 (place J6 72.04000 99.79000 front 90))
+  (component "CONN-SIL5_J7" (place J7 55.96000 56.60000 front 180))
+  (component "CONN-SIL5_J12" (place J12 23.00000 55.22000 front 90))
+  (component PS2_FEMALE_VF_J1 (place J1 20.10000 92.60000 back 90))
+  (component "CONN-SIL9-C_2MMX0.7MM_J2" (place J2 82.56000 47.70000 front 90))
+  (component "CONN-SIL8_J10" (place J10 84.28000 63.50000 front 0))
+  (component "CONN-SIL9-C_2MMX0.7MM_J5" (place J5 83.10000 73.60000 front 90))
+  (component MALE_PIN_HEADER_2MMX0.7MM_J3 (place J3 72.04000 28.65000 front 90))
  )
  (library
   (image MALE_PIN_HEADER_2MMX0.7MM_J6 (side front)
@@ -127,20 +124,12 @@
   (image PS2_FEMALE_VF_J1 (side back)
    (outline (rect TOP -8.60160 -4.50160 5.60160 8.60160))
    (pin PS2 (rotate 0) 0 0.00000 0.00000)
-   (pin PS2 (rotate 0) 1 -3.00000 0.00000)
+   (pin PS3 (rotate 0) 1 -3.00000 0.00000)
    (pin PS2 (rotate 0) 2 1.90000 0.00000)
    (pin PS2 (rotate 0) 3 -4.90000 0.00000)
    (pin PS2 (rotate 0) 4 1.90000 -2.50000)
    (pin PS2 (rotate 0) 5 -4.90000 -2.50000)
-   (pin PS3 (rotate 0) 6 -1.50000 3.80000)
-  )
-  (image "CONN-SIL1_J8" (side front)
-   (outline (rect TOP -1.37160 -1.37160 1.37160 1.37160))
-   (pin PS0 (rotate 0) 0 0.00000 0.00000)
-  )
-  (image "CONN-SIL1_J9" (side front)
-   (outline (rect TOP -1.37160 -1.37160 1.37160 1.37160))
-   (pin PS0 (rotate 0) 0 0.00000 0.00000)
+   (pin PS4 (rotate 0) 6 -1.50000 3.80000)
   )
   (image "CONN-SIL9-C_2MMX0.7MM_J2" (side front)
    (outline (rect TOP -1.37160 -21.69160 1.37160 1.37160))
@@ -275,6 +264,24 @@
    (shape (rect BOT -0.76200 -1.01600 0.76200 1.01600))
   )
   (padstack PS3 (absolute on)
+   (shape (rect TOP -0.70000 -1.00000 0.70000 1.00000))
+   (shape (rect I1 -0.70000 -1.00000 0.70000 1.00000))
+   (shape (rect I2 -0.70000 -1.00000 0.70000 1.00000))
+   (shape (rect I3 -0.70000 -1.00000 0.70000 1.00000))
+   (shape (rect I4 -0.70000 -1.00000 0.70000 1.00000))
+   (shape (rect I5 -0.70000 -1.00000 0.70000 1.00000))
+   (shape (rect I6 -0.70000 -1.00000 0.70000 1.00000))
+   (shape (rect I7 -0.70000 -1.00000 0.70000 1.00000))
+   (shape (rect I8 -0.70000 -1.00000 0.70000 1.00000))
+   (shape (rect I9 -0.70000 -1.00000 0.70000 1.00000))
+   (shape (rect I10 -0.70000 -1.00000 0.70000 1.00000))
+   (shape (rect I11 -0.70000 -1.00000 0.70000 1.00000))
+   (shape (rect I12 -0.70000 -1.00000 0.70000 1.00000))
+   (shape (rect I13 -0.70000 -1.00000 0.70000 1.00000))
+   (shape (rect I14 -0.70000 -1.00000 0.70000 1.00000))
+   (shape (rect BOT -0.70000 -1.00000 0.70000 1.00000))
+  )
+  (padstack PS4 (absolute on)
    (shape (circle TOP 2.50000 0 0))
    (shape (circle I1 2.50000 0 0))
    (shape (circle I2 2.50000 0 0))
@@ -291,6 +298,24 @@
    (shape (circle I13 2.50000 0 0))
    (shape (circle I14 2.50000 0 0))
    (shape (circle BOT 2.50000 0 0))
+  )
+  (padstack PS5 (absolute on)
+   (shape (circle TOP 0.76200 0 0))
+   (shape (circle I1 0.76200 0 0))
+   (shape (circle I2 0.76200 0 0))
+   (shape (circle I3 0.76200 0 0))
+   (shape (circle I4 0.76200 0 0))
+   (shape (circle I5 0.76200 0 0))
+   (shape (circle I6 0.76200 0 0))
+   (shape (circle I7 0.76200 0 0))
+   (shape (circle I8 0.76200 0 0))
+   (shape (circle I9 0.76200 0 0))
+   (shape (circle I10 0.76200 0 0))
+   (shape (circle I11 0.76200 0 0))
+   (shape (circle I12 0.76200 0 0))
+   (shape (circle I13 0.76200 0 0))
+   (shape (circle I14 0.76200 0 0))
+   (shape (circle BOT 0.76200 0 0))
   )
   (padstack $VIA#0_SIGNAL (absolute on)
    (shape (circle TOP 0.76200 0 0))
@@ -330,32 +355,14 @@
   )
  )
  (network
-  (net "GND_ENCODER"
+  (net "GND"
    (circuit
     (use_layer BOT)
     (use_via
-     $VIA#0_SIGNAL
+     $VIA#0_POWER
     )
    )
-   (pins J6-6 J12-4)
-  )
-  (net "GND_MAX"
-   (circuit
-    (use_layer BOT)
-    (use_via
-     $VIA#0_SIGNAL
-    )
-   )
-   (pins J7-1 J3-2)
-  )
-  (net "GND_PS2"
-   (circuit
-    (use_layer BOT)
-    (use_via
-     $VIA#0_SIGNAL
-    )
-   )
-   (pins J6-3 J1-2)
+   (pins J6-3 J7-1 J12-4 J1-2 J3-24)
   )
   (net "MATRIX CLK"
    (circuit
@@ -375,23 +382,14 @@
    )
    (pins J7-2 J3-20)
   )
-  (net "MATRIX_LOAD"
+  (net "MATRIX LOAD"
    (circuit
     (use_layer BOT)
     (use_via
      $VIA#0_SIGNAL
     )
    )
-   (pins J7-3 J9-0)
-  )
-  (net "MATRIX_LOAD_1"
-   (circuit
-    (use_layer BOT)
-    (use_via
-     $VIA#0_SIGNAL
-    )
-   )
-   (pins J8-0 J3-3)
+   (pins J7-3 J3-3)
   )
   (net "PLUGBOARD[A]"
    (circuit
@@ -400,7 +398,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J2-0 J3-5)
+   (pins J2-0 J3-9)
   )
   (net "PLUGBOARD[B]"
    (circuit
@@ -409,7 +407,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J2-1 J3-7)
+   (pins J2-1 J3-11)
   )
   (net "PLUGBOARD[C]"
    (circuit
@@ -418,7 +416,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J2-2 J3-9)
+   (pins J2-2 J3-13)
   )
   (net "PLUGBOARD[D]"
    (circuit
@@ -427,7 +425,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J2-3 J3-11)
+   (pins J2-3 J3-15)
   )
   (net "PLUGBOARD[E]"
    (circuit
@@ -436,7 +434,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J2-4 J3-13)
+   (pins J2-4 J3-17)
   )
   (net "PLUGBOARD[F]"
    (circuit
@@ -445,7 +443,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J2-5 J3-15)
+   (pins J2-5 J3-21)
   )
   (net "PLUGBOARD[G]"
    (circuit
@@ -454,7 +452,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J2-6 J3-17)
+   (pins J2-6 J3-23)
   )
   (net "PLUGBOARD[H]"
    (circuit
@@ -463,7 +461,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J2-7 J3-21)
+   (pins J2-7 J3-25)
   )
   (net "PLUGBOARD[I]"
    (circuit
@@ -472,7 +470,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J2-8 J3-23)
+   (pins J2-8 J3-27)
   )
   (net "PLUGBOARD[J]"
    (circuit
@@ -481,7 +479,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J10-0 J3-25)
+   (pins J10-0 J3-29)
   )
   (net "PLUGBOARD[K]"
    (circuit
@@ -490,7 +488,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J10-1 J3-27)
+   (pins J10-1 J3-31)
   )
   (net "PLUGBOARD[L]"
    (circuit
@@ -499,7 +497,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J10-2 J3-29)
+   (pins J10-2 J3-33)
   )
   (net "PLUGBOARD[M]"
    (circuit
@@ -508,7 +506,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J10-3 J3-31)
+   (pins J10-3 J3-35)
   )
   (net "PLUGBOARD[N]"
    (circuit
@@ -517,7 +515,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J10-4 J3-33)
+   (pins J10-4 J3-37)
   )
   (net "PLUGBOARD[O]"
    (circuit
@@ -526,7 +524,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J10-5 J3-35)
+   (pins J10-5 J3-39)
   )
   (net "PLUGBOARD[P]"
    (circuit
@@ -535,7 +533,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J10-6 J3-37)
+   (pins J10-6 J3-30)
   )
   (net "PLUGBOARD[Q]"
    (circuit
@@ -544,7 +542,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J10-7 J3-39)
+   (pins J10-7 J3-32)
   )
   (net "PLUGBOARD[R]"
    (circuit
@@ -553,7 +551,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J6-28 J5-0)
+   (pins J6-22 J5-0)
   )
   (net "PLUGBOARD[S]"
    (circuit
@@ -562,7 +560,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J5-8 J3-30)
+   (pins J6-24 J5-1)
   )
   (net "PLUGBOARD[T]"
    (circuit
@@ -571,7 +569,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J5-7 J3-32)
+   (pins J6-26 J5-2)
   )
   (net "PLUGBOARD[U]"
    (circuit
@@ -580,7 +578,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J5-6 J3-34)
+   (pins J6-28 J5-3)
   )
   (net "PLUGBOARD[V]"
    (circuit
@@ -589,7 +587,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J6-30 J5-1)
+   (pins J6-30 J5-4)
   )
   (net "PLUGBOARD[W]"
    (circuit
@@ -598,7 +596,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J6-32 J5-2)
+   (pins J6-32 J5-5)
   )
   (net "PLUGBOARD[X]"
    (circuit
@@ -607,7 +605,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J6-34 J5-3)
+   (pins J6-34 J5-6)
   )
   (net "PLUGBOARD[Y]"
    (circuit
@@ -616,7 +614,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J6-36 J5-4)
+   (pins J6-36 J5-7)
   )
   (net "PLUGBOARD[Z]"
    (circuit
@@ -625,7 +623,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J6-38 J5-5)
+   (pins J6-38 J5-8)
   )
   (net "PS2-CLK"
    (circuit
@@ -652,7 +650,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J6-26 J12-0)
+   (pins J6-4 J12-0)
   )
   (net "ROTOR-ENCODER[B]"
    (circuit
@@ -661,7 +659,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J6-24 J12-1)
+   (pins J12-1 J3-7)
   )
   (net "ROTOR-ENCODER[SWITCH]"
    (circuit
@@ -670,7 +668,7 @@
      $VIA#0_SIGNAL
     )
    )
-   (pins J6-22 J12-2)
+   (pins J12-2 J3-5)
   )
   (net "VCC_ENCODER"
    (circuit
@@ -699,14 +697,24 @@
    )
    (pins J6-1 J1-3)
   )
+  (class POWER
+   "GND"
+   (rule
+    (width 0.76200)
+    (clearance 0.76200)
+    (clearance 0.68580 (type wire_via))
+    (clearance 0.68580 (type wire_smd))
+    (clearance 0.68580 (type wire_pin))
+    (clearance 0.76200 (type wire_wire))
+    (clearance 0.25400 (type via_pin))
+    (clearance 0.25400 (type via_via))
+    (clearance 0.25400 (type via_smd))
+   )
+  )
   (class SIGNAL
-   "GND_ENCODER"
-   "GND_MAX"
-   "GND_PS2"
    "MATRIX CLK"
    "MATRIX DIN"
-   "MATRIX_LOAD"
-   "MATRIX_LOAD_1"
+   "MATRIX LOAD"
    "PLUGBOARD[A]"
    "PLUGBOARD[B]"
    "PLUGBOARD[C]"
@@ -757,5 +765,85 @@
   )
  )
  (wiring
+   (wire (path TOP 0.76200 48.65984 47.60239 48.52545 47.60239 48.65985 47.46799 71.23761 47.46799
+  ) (net "MATRIX LOAD") (type protect))
+   (wire (path BOT 0.76200 32.38500 106.04500 32.38500 90.17000 30.48000 88.26500 20.10000 88.26500
+   20.10000 90.70000) (net "GND"))
+   (wire (path BOT 0.76200 74.58000 102.33000 74.58000 104.49000 72.39000 106.68000 34.29000 106.68000
+   33.65500 106.04500 32.38500 106.04500) (net "GND"))
+   (wire (path BOT 0.76200 38.73500 48.89500 38.73500 22.86000 40.64000 20.95500 100.33000 20.95500
+   102.52000 23.14500 102.52000 28.65000) (net "GND"))
+   (wire (path BOT 0.76200 38.73500 48.89500 11.43000 48.89500 9.52500 50.80000 9.52500 65.38000
+  ) (net "GND"))
+   (wire (path BOT 0.76200 53.42000 56.60000 53.42000 58.97500 51.43500 60.96000 40.64000 60.96000
+   38.73500 59.05500 38.73500 48.89500) (net "GND"))
+  (wire (path BOT 0.76200 9.52500 65.38000 23.00000 65.38000) (net "GND"))
+   (wire (path BOT 0.76200 45.80000 56.60000 45.80000 26.67000 47.70500 24.76500 89.82000 24.76500
+   89.82000 28.65000) (net "MATRIX CLK"))
+   (wire (path BOT 0.76200 50.88000 56.60000 50.88000 59.05500 43.81500 59.05500 41.91000 57.15000
+    41.91000 24.76500 43.81500 22.86000 95.25000 22.86000 97.44000 25.05000 97.44000 28.65000
+  ) (net "MATRIX DIN"))
+   (wire (path BOT 0.76200 71.23761 47.46799 74.58000 44.12560 74.58000 31.19000) (net "MATRIX LOAD")
+   (type protect))
+   (wire (path BOT 0.76200 48.34000 56.60000 48.65984 56.28016 48.65984 47.60239) (net "MATRIX LOAD")
+   (type protect))
+   (wire (path BOT 0.76200 82.56000 47.70000 82.56000 41.91000 82.20000 41.55000 82.20000 31.19000
+  ) (net "PLUGBOARD[A]"))
+   (wire (path BOT 0.76200 85.10000 47.70000 85.10000 41.91000 84.74000 41.55000 84.74000 31.19000
+  ) (net "PLUGBOARD[B]"))
+   (wire (path BOT 0.76200 87.64000 47.70000 87.64000 41.91000 87.28000 41.55000 87.28000 31.19000
+  ) (net "PLUGBOARD[C]"))
+   (wire (path BOT 0.76200 90.18000 47.70000 90.18000 37.19000 89.82000 36.83000 89.82000 31.19000
+  ) (net "PLUGBOARD[D]"))
+   (wire (path BOT 0.76200 92.72000 47.70000 92.72000 41.91000 92.36000 41.55000 92.36000 31.19000
+  ) (net "PLUGBOARD[E]"))
+   (wire (path BOT 0.76200 95.26000 47.70000 95.26000 35.83500 97.44000 33.65500 97.44000 31.19000
+  ) (net "PLUGBOARD[F]"))
+   (wire (path BOT 0.76200 97.80000 47.70000 97.80000 36.83000 99.98000 34.65000 99.98000 31.19000
+  ) (net "PLUGBOARD[G]"))
+   (wire (path BOT 0.76200 100.34000 47.70000 100.34000 42.54500 102.52000 40.36500 102.52000 31.19000
+  ) (net "PLUGBOARD[H]"))
+   (wire (path BOT 0.76200 102.88000 47.70000 105.06000 45.52000 105.06000 31.19000)
+   (net "PLUGBOARD[I]"))
+   (wire (path BOT 0.76200 84.28000 63.50000 84.28000 52.07000 86.18500 50.16500 105.41000 50.16500
+   107.60000 47.97500 107.60000 31.19000) (net "PLUGBOARD[J]"))
+   (wire (path BOT 0.76200 86.82000 63.50000 86.82000 54.15000 88.90000 52.07000 108.23500 52.07000
+   110.14000 50.16500 110.14000 31.19000) (net "PLUGBOARD[K]"))
+   (wire (path BOT 0.76200 89.36000 63.50000 89.36000 55.73750 91.44000 53.65750 110.45750 53.65750
+   112.68000 51.43500 112.68000 31.19000) (net "PLUGBOARD[L]"))
+   (wire (path BOT 0.76200 91.90000 63.50000 91.90000 57.32500 93.98000 55.24500 113.31500 55.24500
+   115.22000 53.34000 115.22000 31.19000) (net "PLUGBOARD[M]"))
+   (wire (path BOT 0.76200 94.44000 63.50000 94.44000 59.23000 96.52000 57.15000 115.85500 57.15000
+   117.76000 55.24500 117.76000 31.19000) (net "PLUGBOARD[N]"))
+   (wire (path BOT 0.76200 96.98000 63.50000 96.98000 61.13500 99.06000 59.05500 118.39500 59.05500
+   120.30000 57.15000 120.30000 31.19000) (net "PLUGBOARD[O]"))
+   (wire (path BOT 0.76200 99.52000 63.50000 99.52000 66.04000 124.46000 66.04000 126.36500 64.13500
+    126.36500 24.76500 124.46000 22.86000 112.04500 22.86000 110.14000 24.76500 110.14000 28.65000
+  ) (net "PLUGBOARD[P]"))
+   (wire (path BOT 0.76200 102.06000 63.50000 120.65000 63.50000 122.55500 61.59500 122.55500 26.67000
+   120.65000 24.76500 112.68000 24.76500 112.68000 28.65000) (net "PLUGBOARD[Q]"))
+   (wire (path BOT 0.76200 112.68000 102.33000 112.68000 106.68000 110.77500 108.58500
+    30.48000 108.58500 28.57500 106.68000 28.57500 92.71000 26.56500 90.70000 22.60000 90.70000
+  ) (net "PS2-CLK"))
+   (wire (path BOT 0.76200 77.12000 99.79000 77.12000 71.76738 74.93000 69.57738 29.57238 69.57738
+    27.30500 67.31000 27.30500 57.12500 25.40000 55.22000 23.00000 55.22000) (net "ROTOR-ENCODER[A]")
+  )
+   (wire (path BOT 0.76200 23.00000 57.76000 19.05000 57.76000 19.05000 54.61000 20.95500 52.70500
+    27.30500 52.70500 29.21000 54.61000 29.21000 62.86500 31.11500 64.77000 77.47000 64.77000
+   79.66000 62.58000 79.66000 31.19000) (net "ROTOR-ENCODER[B]"))
+   (wire (path BOT 0.76200 23.00000 60.30000 19.05000 60.30000 17.14500 58.39500 17.14500 52.70500
+    19.05000 50.80000 34.29000 50.80000 36.19500 52.70500 36.19500 60.96000 38.10000 62.86500
+    74.93000 62.86500 77.12000 60.67500 77.12000 31.19000) (net "ROTOR-ENCODER[SWITCH]")
+  )
+   (wire (path BOT 0.76200 72.04000 99.79000 50.99000 78.74000 27.30500 78.74000 25.40000 76.83500
+   25.40000 63.84000 24.40000 62.84000 23.00000 62.84000) (net "VCC_ENCODER"))
+   (wire (path BOT 0.76200 55.96000 56.60000 55.96000 47.27000 72.04000 31.19000) (net "VCC_MAX")
+  )
+   (wire (path BOT 1.01600 72.04000 102.33000 70.93240 103.43760 68.99622 103.43760 68.03802 104.39580
+    41.37941 104.39580 37.07459 100.09098 37.07459 87.21936 36.64554 86.79031 34.32865 84.47342
+    16.30839 84.47342 12.01785 88.76396 12.01785 102.32206 12.87595 103.18016 17.33812 103.18016
+   20.10000 100.41828 20.10000 97.50000) (net "VCC_PS2") (type protect))
+  (via PS5 71.23761 47.46799 (net "MATRIX LOAD"))
+  (via PS5 48.65984 47.60239 (net "MATRIX LOAD"))
  )
 )
