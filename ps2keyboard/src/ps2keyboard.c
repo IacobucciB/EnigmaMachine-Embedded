@@ -13,8 +13,8 @@
 
 /* Keyboard constants  Change to suit your Arduino
    define pins used for data and clock from keyboard */
-#define DATAPIN T_FIL0
-#define IRQPIN  T_COL1
+#define IRQPIN  T_COL2
+#define DATAPIN T_FIL1
 
 /*=====[Definitions of extern global variables]==============================*/
 
@@ -32,8 +32,8 @@ int main( void )
 	boardInit();
 
 	// Configure the keyboard library
-	PS2KeyAdvanced_begin( DATAPIN, IRQPIN );
-	printf( "PS2 Advanced Key Simple Test:" );
+	PS2KeyAdvanced_begin( T_FIL1, T_COL2 );
+	printf( "PS2 Advanced Key Simple Test:\r\n" );
 
 	// ----- Repeat for ever -------------------------
 	while( true ) {
