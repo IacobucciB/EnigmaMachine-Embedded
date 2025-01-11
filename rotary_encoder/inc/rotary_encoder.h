@@ -27,6 +27,8 @@ extern "C" {
 /*=====[Definitions of public data types]====================================*/
 
 /*=====[Prototypes (declarations) of public functions]=======================*/
+int8_t RotaryEncoder_Read_Blocking();
+void RotaryEncoder_Init();
 
 /*=====[Prototypes (declarations) of public interrupt functions]=============*/
 

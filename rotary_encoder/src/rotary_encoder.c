@@ -12,16 +12,14 @@
 // Robust Rotary encoder reading
 //
 // Copyright John Main - best-microcontroller-projects.com
-//
-#define CLK ISP //PINA ¡NO SE USA!
+
+#define CLK ISP //PINA
 #define DATA ENET_MDC //PINB
 
 static uint8_t prevNextCode = 0;
 static uint16_t store = 0;
 
-int8_t read_rotary();
-void RotaryEncoder_Init();
-void RotaryEncoder_Update();
+void update();
 
 int main( void )
 {
@@ -32,7 +30,7 @@ int main( void )
 
    // ----- Repeat for ever -------------------------
    while( true ) {
-	   RotaryEncoder_Update();
+	   update();
    }
 
    // YOU NEVER REACH HERE, because this program runs directly or on a
@@ -42,23 +40,28 @@ int main( void )
 }
 
 void RotaryEncoder_Init() {
-  Chip_SCU_PinMuxSet(0x07,6,(SCU_MODE_FUNC0 | SCU_MODE_PULLUP | SCU_MODE_INBUFF_EN));
-  Chip_GPIO_SetPinDIRInput( LPC_GPIO_PORT, 3, 14);
+	// Configurar CLK pin como entrada con pullup
+#if CLK == ISP
+	//ya que el pin ISP no es configurable mediante sAPI, se usa LPC_Open
+	Chip_SCU_PinMuxSet( 0x07, 6, (SCU_MODE_FUNC0 | SCU_MODE_PULLUP | SCU_MODE_INBUFF_EN) );
+	Chip_GPIO_SetPinDIRInput( LPC_GPIO_PORT, 3, 14 );
+#else
+	gpioConfig( CLK, GPIO_INPUT_PULLUP );
+#endif
 
-  gpioConfig(DATA, GPIO_INPUT_PULLUP);
-
-  printf("KY-040 Start:\r\n");
+	// Configurar CLK pin como entrada con pullup
+	gpioConfig( DATA, GPIO_INPUT_PULLUP );
 }
 
-void RotaryEncoder_Update() {
+void update() {
    static int8_t c, val;
 
-   val = read_rotary();
+   val = RotaryEncoder_Read_Blocking();
    if( val ) {
       c +=val;
       printf("%d ", c);
 
-      if ( prevNextCode==0x0b || prevNextCode==0x04) {
+      if ( prevNextCode==0x0b || prevNextCode==0x04 ) {
     	  if(prevNextCode==0x0b)
     	  {
     		 printf("eleven ");
@@ -71,7 +74,7 @@ void RotaryEncoder_Update() {
          printf("%x\r\n", store);
       }
 
-      if ( prevNextCode==0x08 || prevNextCode==0x07) {
+      if ( prevNextCode==0x08 || prevNextCode==0x07 ) {
     	 if(prevNextCode==0x07)
     	 {
     		 printf("seven ");
@@ -86,23 +89,20 @@ void RotaryEncoder_Update() {
 }
 
 // A vald CW or  CCW move returns 1, invalid returns 0.
-int8_t read_rotary() {
-  static int8_t rot_enc_table[] = {0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0};
+int8_t RotaryEncoder_Read_Blocking() {
+	static int8_t rot_enc_table[] = {0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0};
 
-  prevNextCode <<= 2;
-  if ( gpioRead(DATA) ) prevNextCode |= 0x02;
-  if ( Chip_GPIO_ReadPortBit( LPC_GPIO_PORT, 3, 14) ) prevNextCode |= 0x01;
-  prevNextCode &= 0x0f;
+	prevNextCode <<= 2;
+	if ( gpioRead(DATA) ) prevNextCode |= 0x02;
+	if ( Chip_GPIO_ReadPortBit( LPC_GPIO_PORT, 3, 14 ) ) prevNextCode |= 0x01;
+	prevNextCode &= 0x0f;
 
-   // If valid then store as 16 bit data.
-   if  (rot_enc_table[prevNextCode] ) {
-	  printf("State: %x\r\n", prevNextCode);
-      store <<= 4;
-      store |= prevNextCode;
-      //if (store==0xd42b) return 1;
-      //if (store==0xe817) return -1;
-      if ((store&0xff)==0xd4 || (store&0xff)==0x2b) return -1;
-      if ((store&0xff)==0xe8 || (store&0xff)==0x17) return 1;
-   }
-   return 0;
+	// If valid then store as 16 bit data.
+	if ( rot_enc_table[prevNextCode] ) {
+		store <<= 4;
+		store |= prevNextCode;
+		if ( (store&0xff)==0xd4 || (store&0xff)==0x2b ) return -1;
+		if ( (store&0xff)==0xe8 || (store&0xff)==0x17 ) return 1;
+	}
+	return 0;
 }
