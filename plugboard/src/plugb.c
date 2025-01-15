@@ -6,7 +6,7 @@
 
 /*=====[Inclusions of function dependencies]=================================*/
 
-#include "plug1.h"
+#include "plugb.h"
 #include "sapi.h"
 
 /*=====[Definition macros of private constants]==============================*/
@@ -15,53 +15,50 @@
 /*=====[Definitions of extern global variables]==============================*/
 
 /*=====[Definitions of public global variables]==============================*/
-char plugboard[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 /*=====[Definitions of private global variables]=============================*/
+char plugboard[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 // Definir los pines GPIO asociados a cada letra
 int pinMap[NUM_LETTERS] = {
-    /* Aquí se asignan los pines GPIO que usa cada letra */
-	ENET_CRS_DV, 	// A
-	ENET_MDIO,		// B
-	ENET_TXD0, 		// C
-	ENET_TXD1, 		// D
+    /* Aqui se asignan los pines GPIO que usa cada letra */
+	LCD2, 			// A
+	LCD3,			// B
+	LCDRS, 			// C
+	LCD4, 			// D
 	SPI_MISO, 		// E
-	LCD4, 			// E
-	LCDRS, 			// E
-	LCD3,
-	LCD2,
-	LCD1,
-	GPIO1,
-	GPIO3,
-	GPIO5,
-	GPIO7,
-	GPIO8,
-	GPIO2,
-	GPIO4,
-	RS232_RXD,
-	RS232_TXD,
-	CAN_RD,
-	CAN_TD,
-	T_COL1,
-	T_COL0,
-	T_FIL2,
-	T_FIL3,
-	T_FIL0
+	ENET_TXD1, 		// F
+	ENET_TXD0, 		// G
+	ENET_MDIO,		// H
+	ENET_CRS_DV,	// I
+	GPIO4,			// J
+	GPIO2,			// K
+	GPIO8,			// L
+	GPIO7,			// M
+	GPIO5,			// N
+	GPIO3,			// O
+	GPIO1,			// P
+	LCD1,			// Q
+	T_FIL0,			// R
+	T_FIL3,			// S
+	T_FIL2,			// T
+	T_COL0,			// U
+	T_COL1,			// V
+	CAN_TD,			// W
+	CAN_RD,			// X
+	RS232_TXD,		// Y
+	RS232_RXD		// Z
 };
 
 // Inicializar los pines como GPIO
-void initPins() {
+void PLUGB_Init() {
     for (uint8_t i = 0; i < NUM_LETTERS; i++) {
     	gpioInit(pinMap[i], GPIO_INPUT_PULLDOWN); // Configurar cada pin como GPIO de entrada
     }
-
-    Chip_SCU_PinMuxSet(0x07,6,(SCU_MODE_FUNC0 | SCU_MODE_PULLUP | SCU_MODE_INBUFF_EN));
-    Chip_GPIO_SetPinDIRInput( LPC_GPIO_PORT, 3, 14);
 }
 
 // Realizar el barrido por software
-void scanPlugboard() {
+void PLUGB_Scan() {
 	for (uint8_t i = 0; i < NUM_LETTERS; i++) {
 	  gpioInit(pinMap[i], GPIO_OUTPUT);
 	  gpioWrite(pinMap[i], TRUE); // Coloca en alto este pin
@@ -99,7 +96,7 @@ int main( void )
    boardInit();
 
    // Inicializar los pines
-   initPins();
+   PLUGB_Init();
 
    delay_t printDelay;
    delayConfig( &printDelay, 2000 );
@@ -107,9 +104,9 @@ int main( void )
    // ----- Repeat for ever -------------------------
    while( true ) {
 	  // Escanear el plugboard
-	  scanPlugboard();
+	  PLUGB_Scan();
 
-	  if(Chip_GPIO_ReadPortBit( LPC_GPIO_PORT, 3, 14)){
+	  if( Chip_GPIO_ReadPortBit( LPC_GPIO_PORT, 3, 14 ) ){
 		  printf("Prendido \r\n");
 	  }
 	  printf("Plugboard: %s \r\n", plugboard);

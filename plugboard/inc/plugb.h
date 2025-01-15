@@ -6,8 +6,8 @@
 
 /*=====[Avoid multiple inclusion - begin]====================================*/
 
-#ifndef __PLUG1_H__
-#define __PLUG1_H__
+#ifndef __PLUGB_H__
+#define __PLUGB_H__
 
 /*=====[Inclusions of public function dependencies]==========================*/
 
@@ -27,6 +27,8 @@ extern "C" {
 /*=====[Definitions of public data types]====================================*/
 
 /*=====[Prototypes (declarations) of public functions]=======================*/
+void PLUGB_Init();
+void PLUGB_Scan();
 
 /*=====[Prototypes (declarations) of public interrupt functions]=============*/
 
@@ -38,4 +40,4 @@ extern "C" {
 
 /*=====[Avoid multiple inclusion - end]======================================*/
 
-#endif /* __PLUG1_H__ */
+#endif /* __PLUGB_H__ */
