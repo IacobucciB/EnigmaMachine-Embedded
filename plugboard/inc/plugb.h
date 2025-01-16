@@ -29,6 +29,8 @@ extern "C" {
 /*=====[Prototypes (declarations) of public functions]=======================*/
 void PLUGB_Init();
 void PLUGB_Scan();
+char PLUGB_GetMapping(char input);
+const char* PLUGB_GetAllMappings();
 
 /*=====[Prototypes (declarations) of public interrupt functions]=============*/
 

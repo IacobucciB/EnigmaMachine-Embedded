@@ -17,10 +17,10 @@
 /*=====[Definitions of public global variables]==============================*/
 
 /*=====[Definitions of private global variables]=============================*/
-char plugboard[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+static char plugboardMappings[NUM_LETTERS + 1] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 // Definir los pines GPIO asociados a cada letra
-int pinMap[NUM_LETTERS] = {
+static const int pinMapping[NUM_LETTERS] = {
     /* Aqui se asignan los pines GPIO que usa cada letra */
 	LCD2, 			// A
 	LCD3,			// B
@@ -53,15 +53,15 @@ int pinMap[NUM_LETTERS] = {
 // Inicializar los pines como GPIO
 void PLUGB_Init() {
     for (uint8_t i = 0; i < NUM_LETTERS; i++) {
-    	gpioInit(pinMap[i], GPIO_INPUT_PULLDOWN); // Configurar cada pin como GPIO de entrada
+    	gpioInit(pinMapping[i], GPIO_INPUT_PULLDOWN); // Configurar cada pin como GPIO de entrada
     }
 }
 
 // Realizar el barrido por software
 void PLUGB_Scan() {
 	for (uint8_t i = 0; i < NUM_LETTERS; i++) {
-	  gpioInit(pinMap[i], GPIO_OUTPUT);
-	  gpioWrite(pinMap[i], TRUE); // Coloca en alto este pin
+	  gpioInit(pinMapping[i], GPIO_OUTPUT);
+	  gpioWrite(pinMapping[i], TRUE); // Coloca en alto este pin
 
 	  bool_t state = FALSE;
 
@@ -69,23 +69,36 @@ void PLUGB_Scan() {
 	  {
 		  if(i != j)
 		  {
-			  state = gpioRead(pinMap[j]);
+			  state = gpioRead(pinMapping[j]);
 			  if(state)
 			  {
-				plugboard[i] = 'A' + j;
-				plugboard[j] = 'A' + i;
+				plugboardMappings[i] = 'A' + j;
+				plugboardMappings[j] = 'A' + i;
 				break;
 			  }
 			  else
 			  {
-				plugboard[i] = 'A' + i;
+				plugboardMappings[i] = 'A' + i;
 			  }
 		  }
 	  }
 
-	  gpioWrite(pinMap[i], FALSE);
-	  gpioInit(pinMap[i], GPIO_INPUT_PULLDOWN);
+	  gpioWrite(pinMapping[i], FALSE);
+	  gpioInit(pinMapping[i], GPIO_INPUT_PULLDOWN);
 	}
+}
+
+// Función para obtener el mapeo de una letra
+char PLUGB_GetMapping(char input) {
+    if (input >= 'A' && input <= 'Z') {
+        return plugboardMappings[input - 'A'];
+    }
+    return '\0'; // Retorna un carácter nulo si la entrada es inválida
+}
+
+// Función para obtener todos los mapeos en un arreglo
+const char* PLUGB_GetAllMappings() {
+    return plugboardMappings;
 }
 
 /*=====[Main function, program entry point after power on or reset]==========*/
@@ -106,10 +119,7 @@ int main( void )
 	  // Escanear el plugboard
 	  PLUGB_Scan();
 
-	  if( Chip_GPIO_ReadPortBit( LPC_GPIO_PORT, 3, 14 ) ){
-		  printf("Prendido \r\n");
-	  }
-	  printf("Plugboard: %s \r\n", plugboard);
+	  printf("Plugboard: %s \r\n", PLUGB_GetAllMappings());
 
 	  delay(1000);
    }
