@@ -111,9 +111,6 @@ int main( void )
    // Inicializar los pines
    PLUGB_Init();
 
-   delay_t printDelay;
-   delayConfig( &printDelay, 2000 );
-
    // ----- Repeat for ever -------------------------
    while( true ) {
 	  // Escanear el plugboard
@@ -121,7 +118,7 @@ int main( void )
 
 	  printf("Plugboard: %s \r\n", PLUGB_GetAllMappings());
 
-	  delay(1000);
+	  delay(500);
    }
 
    // YOU NEVER REACH HERE, because this program runs directly or on a
