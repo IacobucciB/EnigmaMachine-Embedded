@@ -5,59 +5,71 @@
 
 /*=====[Inclusions of function dependencies]=================================*/
 
-#include "MEF.h"
 #include "sapi.h"
+#include "MEF.h"
+#include "../inc/plugb.h"
 
 /*=====[Definition macros of private constants]==============================*/
 
 /*=====[Definitions of extern global variables]==============================*/
 #define NUM_ROTORS 3
-uint8_t rotor_index = 0;
+#define PLUGB_DELAY 500
 
 /*=====[Definitions of public global variables]==============================*/
 
 /*=====[Definitions of private global variables]=============================*/
 typedef enum { ENCRYPT, CONFIG_PB, CONFIG_ROTOR } MEF_state_t;
-MEF_state_t state;
+static MEF_state_t state;
+
+static uint8_t rotor_index = 0;
+
+static delay_t plugbDelay;
 
 void MEF_Init()
 {
 	state = ENCRYPT;
+
+	PLUGB_Init();
 }
 
 void MEF_Update(void) {
-	if(state != CONFIG_ROTOR || rotor_index == NUM_ROTORS)
+	if( state != CONFIG_ROTOR || rotor_index == NUM_ROTORS )
 	{
 		state++;
 		state %= 3;
 	}
-	switch (state) {
+	switch ( state ) {
 		case ENCRYPT:
 			rotor_index = 0;
-			printf("Modo encriptacion");
+			printf( "Modo encriptacion" );
 			break;
 		case CONFIG_PB:
-			printf("Configurando plugboard");
+			delayInit( &plugbDelay, PLUGB_DELAY );
+			printf( "Configurando plugboard" );
 			break;
 		case CONFIG_ROTOR:
 			rotor_index %= NUM_ROTORS;
 			rotor_index++;
-			printf("Configurando rotor %d", rotor_index);
+			printf( "Configurando rotor %d", rotor_index );
 			break;
 		default:
 			break;
 	}
-	printf("\r\n");
+	printf( "\r\n" );
 }
 
 void MEF_Run()
 {
-	switch (state) {
+	switch ( state ) {
 		case ENCRYPT:
 			//Do something
 			break;
 		case CONFIG_PB:
-			//Do something
+			if( delayRead( &plugbDelay ) )
+			{
+				PLUGB_Scan();
+				printf( "Plugboard: %s \r\n", PLUGB_GetAllMappings() );
+			}
 			break;
 		case CONFIG_ROTOR:
 			//Do something
