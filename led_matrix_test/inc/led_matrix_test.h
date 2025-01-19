@@ -5,8 +5,8 @@
 
 /*=====[Avoid multiple inclusion - begin]====================================*/
 
-#ifndef __LED_MATRIX_LETTERS_H__
-#define __LED_MATRIX_LETTERS_H__
+#ifndef __LED_MATRIX_TEST_H__
+#define __LED_MATRIX_TEST_H__
 
 /*=====[Inclusions of public function dependencies]==========================*/
 
@@ -37,4 +37,4 @@ extern "C" {
 
 /*=====[Avoid multiple inclusion - end]======================================*/
 
-#endif /* __LED_MATRIX_LETTERS_H__ */
+#endif /* __LED_MATRIX_TEST_H__ */

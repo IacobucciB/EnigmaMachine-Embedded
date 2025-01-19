@@ -61,6 +61,7 @@
 
 /*==================[inclusions]=============================================*/
 #include "switch.h"
+
 #include "chip.h"
 
 /*==================[macros and definitions]=================================*/
@@ -117,7 +118,7 @@ uint8_t Init_Switches(void)
 	 * binaries positions represent each push-button.
 	 * */
 
-	/* Configuración del GPIO*/
+	/* Configuracion del GPIO*/
 	Chip_GPIO_Init(LPC_GPIO_PORT);
 
 	/* Mapeo de pines Pulsadores */
@@ -126,7 +127,7 @@ uint8_t Init_Switches(void)
 	Chip_SCU_PinMux(SW3_MUX_GROUP,SW3_MUX_PIN,MD_PUP|MD_EZI|MD_ZI,FUNC0);
 	Chip_SCU_PinMux(SW4_MUX_GROUP,SW4_MUX_PIN,MD_PUP|MD_EZI|MD_ZI,FUNC0);
 
-	/* Configuración como entrada para los pulsadores */
+	/* Configuracion como entrada para los pulsadores */
 	Chip_GPIO_SetDir(LPC_GPIO_PORT, SW1_GPIO_PORT,1<<SW1_GPIO_PIN,INPUT_DIRECTION);
 	Chip_GPIO_SetDir(LPC_GPIO_PORT, SW2_GPIO_PORT,1<<SW2_GPIO_PIN,INPUT_DIRECTION);
 	Chip_GPIO_SetDir(LPC_GPIO_PORT, SW3_GPIO_PORT,1<<SW3_GPIO_PIN,INPUT_DIRECTION);

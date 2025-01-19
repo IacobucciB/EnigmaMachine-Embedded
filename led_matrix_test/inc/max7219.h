@@ -40,8 +40,9 @@
 
 /*==================[inclusions]=============================================*/
 
+#include "sapi.h"
+
 #include "spi_generic_device.h"
-#include "gpio_hal.h"
 
 /*==================[macros and definitions]=================================*/
 
@@ -104,7 +105,7 @@ typedef uint8_t max7219Data_t[MAX7219_SIZE];
  */
 typedef struct {
 	spiDevice_t spi;	/**< SPI: Device */
-	gpioPin_t cs;		/**< GPIO: Chip Select */
+	gpioMap_t cs;		/**< GPIO: Chip Select */
 	max7219Data_t data; /**< Matrix data buffer. Reflects state of the led matrix */
 } max7219_t;
 
@@ -118,11 +119,11 @@ extern spiConfig_t max7219_spi_default_cfg; /**< Used on initialization function
  * @brief Initialize MAX7219 module attached with a led matrix
  *
  * @param[in] max7219 	Pointer to MAX7219 configuration structure
- * @param[in] gpio_n 	GPIO number
+ * @param[in] cs_pin 	GPIO pin
  * @param[in] cfg	 	SPI configuration
  *
  */
-void Max7219Init(max7219_t *max7219, gpioNumber_t gpio_n, spiConfig_t cfg);
+void Max7219Init(max7219_t *max7219, gpioMap_t cs_pin, spiConfig_t cfg);
 
 /**
  * @brief Transfer the data buffer to led matrix. Updates matrix

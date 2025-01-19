@@ -28,15 +28,16 @@ static const uint16_t default_init_seq[] = {
 /*==================[internal functions definition]==========================*/
 
 static void CsLow(max7219_t *max7219) {
-	GpioWrite(&max7219->cs, GPIO_LOW);
+//	GpioWrite(&max7219->cs, GPIO_LOW);
+	gpioWrite(max7219->cs, 0);
 }
 
 static void CsHigh(max7219_t *max7219) {
-	GpioWrite(&max7219->cs, GPIO_HIGH);
+//	GpioWrite(&max7219->cs, GPIO_HIGH);
+	gpioWrite(max7219->cs, 1);
 }
 
-static void SpiWrite(max7219_t *max7219, const uint16_t *buffer,
-		uint32_t n_commands) {
+static void SpiWrite(max7219_t *max7219, const uint16_t *buffer, uint32_t n_commands) {
 	uint32_t cnt = 0;
 	void * ptr;
 	while (cnt < n_commands) {
@@ -57,14 +58,13 @@ static bool ValidPoint(uint8_t x, uint8_t y) {
 
 /*==================[external functions definition]==========================*/
 
-void Max7219Init(max7219_t *max7219, gpioNumber_t gpio_n, spiConfig_t cfg) {
+void Max7219Init(max7219_t *max7219, gpioMap_t cs_pin, spiConfig_t cfg) {
 	max7219->spi.cfg = cfg;
 	SpiDevInit(&max7219->spi);
 
-	max7219->cs.n = gpio_n;
-	max7219->cs.dir = GPIO_OUT;
-	max7219->cs.init_st = GPIO_HIGH;  // IS ACTIVE LOW
-	GpioConfig(&max7219->cs);
+	max7219->cs = cs_pin;
+	gpioConfig(max7219->cs, GPIO_OUTPUT);
+	gpioConfig(max7219->cs, 1); // IS ACTIVE LOW
 
 	SpiWrite(max7219, default_init_seq, 5); // 5 Initialization commands
 	Max7219Blank(max7219);

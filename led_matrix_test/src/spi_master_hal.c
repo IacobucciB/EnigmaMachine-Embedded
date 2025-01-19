@@ -5,6 +5,7 @@
 /*==================[inclusions]=============================================*/
 
 #include "spi_master_hal.h"
+
 #include "chip.h"
 
 /*==================[macros and definitions]=================================*/
@@ -30,14 +31,15 @@ static bool initialized_ssp[] = { false, false };
 
 static const uint8_t bits[] = { SSP_BITS_8, SSP_BITS_16 };
 
-static const uint8_t clock_mode[] = { SSP_CLOCK_CPHA0_CPOL0, /**< Clock Phase: First transition 	| Clock Out Polarity: Low */
-SSP_CLOCK_CPHA0_CPOL1, /**< Clock Phase: First transition 	| Clock Out Polarity: High */
-SSP_CLOCK_CPHA1_CPOL0, /**< Clock Phase: Second transition | Clock Out Polarity: Low */
-SSP_CLOCK_CPHA1_CPOL1 /**< Clock Phase: Second transition | Clock Out Polarity: High */
+static const uint8_t clock_mode[] = {
+	SSP_CLOCK_CPHA0_CPOL0, /**< Clock Phase: First transition 	| Clock Out Polarity: Low */
+	SSP_CLOCK_CPHA0_CPOL1, /**< Clock Phase: First transition 	| Clock Out Polarity: High */
+	SSP_CLOCK_CPHA1_CPOL0, /**< Clock Phase: Second transition | Clock Out Polarity: Low */
+	SSP_CLOCK_CPHA1_CPOL1 /**< Clock Phase: Second transition | Clock Out Polarity: High */
 };
 
 static const sspCfg_t ssp_1_cfg[] = {
-	{ 0x01, 19, (SCU_MODE_PULLUP	| SCU_MODE_FUNC1) }, /**< HW pin: spi_clk */
+	{ 0x01, 19, (SCU_MODE_PULLUP	| SCU_MODE_FUNC1) }, /**< HW pin: enet_ref_clk */
 	{ 0x01, 3, (SCU_MODE_PULLUP | SCU_MODE_INBUFF_EN | SCU_MODE_ZIF_DIS	| SCU_MODE_FUNC5) }, /**< HW pin: spi_miso */
 	{ 0x01, 4, (SCU_MODE_PULLUP | SCU_MODE_FUNC5) } /**< HW pin: spi_mosi */
 };

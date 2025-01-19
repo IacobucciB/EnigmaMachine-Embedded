@@ -5,6 +5,7 @@
 /*==================[inclusions]=============================================*/
 
 #include "spi_generic_device.h"
+
 #include "chip.h"
 
 /*==================[macros and definitions]=================================*/

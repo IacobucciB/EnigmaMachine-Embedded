@@ -5,11 +5,11 @@
 
 /*=====[Inclusions of function dependencies]=================================*/
 
-#include "led_matrix_letters.h"
+#include "sapi.h"
+#include "font8x8_basic.h"
 #include "led_matrix.h"
 #include "switch.h"
-#include "font8x8_basic.h"
-#include "sapi.h"
+#include "led_matrix_test.h"
 
 /*=====[Definition macros of private constants]==============================*/
 
@@ -28,7 +28,7 @@ int main(void) {
 	boardInit();
 
 	max7219_t max7219;
-	Max7219Init(&max7219, GPIO_MAX, max7219_spi_default_cfg);
+	Max7219Init(&max7219, ENET_RXD1, max7219_spi_default_cfg);
 
 	ledMatrix_t mat;
 	MatrixInit(&mat, max7219, ROT_270_CW);
@@ -47,7 +47,6 @@ int main(void) {
 		key = Read_Switches();
 
 		if (key == 1) {
-			//letter = 0x3f66663e66663f00;
 			letter = 0;
 			for (i = 0; i < 8; ++i)
 			{
