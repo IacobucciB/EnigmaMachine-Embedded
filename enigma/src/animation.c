@@ -1,165 +1,209 @@
-/*
- * animation.c
- *
- *  Created on: 2 feb. 2025
- *      Author: Lisandro
- */
+/*=============================================================================
+ * Author: Martinez Lisandro <lisandromartz@gmail.com>
+ * Date: 2025/01/10
+ *===========================================================================*/
 
-#include "led_matrix.h"
-#include "font8x8_basic.h"
+/*=====[Inclusions of function dependencies]=================================*/
 
-#define LETTER_ROW( ROW, VALUE ) ( ((uint64_t) VALUE) << ((7 - ROW) * 8))
-#define BITMAP8X8_TO_IMAGE64x1( ROW, VALUE ) ( ((uint64_t) VALUE) << ((7 - ROW) * 8) )
+#include "sapi.h"
+#include "plugb.h"
+#include "rotary_encoder.h"
+#include "enigmaAPI.h"
+#include "PS2KeyAdvanced.h"
+#include "animation.h"
+#include "MEF.h"
 
-const uint8_t font5x3_numbers[10][8] = {
-		{0x00, 0xe0, 0xa0, 0xa0, 0xa0, 0xe0, 0x00, 0x00}, // zero
-		{0x00, 0xc0, 0x40, 0x40, 0x40, 0xe0, 0x00, 0x00}, // one
-		{0x00, 0xe0, 0x20, 0xe0, 0x80, 0xe0, 0x00, 0x00}, // two
-		{0x00, 0xe0, 0x20, 0x60, 0x20, 0xe0, 0x00, 0x00}, // three
-		{0x00, 0xa0, 0xa0, 0xe0, 0x20, 0x20, 0x00, 0x00}, // four
-		{0x00, 0xe0, 0x80, 0xe0, 0x20, 0xe0, 0x00, 0x00}, // five
-		{0x00, 0xe0, 0x80, 0xe0, 0xa0, 0xe0, 0x00, 0x00}, // six
-		{0x00, 0xe0, 0x20, 0x60, 0x20, 0x20, 0x00, 0x00}, // seven
-		{0x00, 0xe0, 0xa0, 0xe0, 0xa0, 0xe0, 0x00, 0x00}, // eight
-		{0x00, 0xe0, 0xa0, 0xe0, 0x20, 0x20, 0x00, 0x00}  // nine
-};
+/*=====[Definition macros of private constants]==============================*/
+#define NUM_ROTORS 3
+#define PLUGB_DELAY 500
+#define ROTOR_ANIM_DELAY 700
 
-const uint8_t RomanNumbers[3][8] = {
-		{0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18}, // one
-		{0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66}, // two
-		{0xDB, 0xDB, 0xDB, 0xDB, 0xDB, 0xDB, 0xDB, 0xDB}  // three
-};
+/* Pins used for data and clock from keyboard */
+#define IRQ_PIN  T_COL2
+#define DATA_PIN T_FIL1
 
-static ledMatrix_t mat;
+/*=====[Definitions of extern global variables]==============================*/
 
-void Animation_Init()
+/*=====[Definitions of public global variables]==============================*/
+
+/*=====[Definitions of private global variables]=============================*/
+typedef enum { ENCRYPT, CONFIG_PB, CONFIG_ROTOR } MEF_state_t;
+static MEF_state_t state;
+
+static void MEF_ConfigRotor();
+static void MEF_Encrypt();
+static void MEF_ConfigPB();
+static void (*MEF_Behavior[])(void) = { MEF_Encrypt, MEF_ConfigPB, MEF_ConfigRotor };
+
+static delay_t plugbDelay;
+static delay_t rotorAnimDelay;
+static bool_t keyPressed = false;
+static bool_t pressMsgDone = false;
+static uint8_t waitAnimTimes = 3;
+static bool_t loadAnimDone = true;
+static bool_t rotorAnimDone = false;
+
+static char* const plugbMessage = "PLUG ";
+static char* const encryptMessage = "PRESS A KEY ";
+
+static uint8_t rotorIndex = 0;
+static uint8_t rotorPos[NUM_ROTORS] = { 0 };
+
+static char out;
+
+void MEF_Init()
 {
-	max7219_t max7219;
-	Max7219Init( &max7219, ENET_RXD1, max7219_spi_default_cfg );
-	MatrixInit( &mat, max7219, ROT_270_CW );
+	PLUGB_Init();
 
-	//smile face
-	MatrixSetImage( &mat, 0x7e81a581bd99817e );
-	MatrixUpdate( &mat );
+	RotaryEncoder_Init();
+	delayInit( &rotorAnimDelay, 500 );
+
+	PS2KeyAdvanced_begin(DATA_PIN, IRQ_PIN, 0);
+
+	Animation_Init();
+
+	state = ENCRYPT;
+	out = 0;
+	enigma_init( 3, 2, 1, rotorPos[0], rotorPos[1], rotorPos[2] );
+	Animation_WaitInput(true);
+	pressMsgDone = Animation_ShiftText(encryptMessage, true);
 }
 
-void Animation_DrawCharacter(char c)
-{
-	uint64_t image = 0x00;
-	for (uint8_t i = 0; i < 8; ++i) {
-		image |= BITMAP8X8_TO_IMAGE64x1(i, font8x8_ib8x8u[c][i]);
-	}
+void MEF_Update(void) {
+	Animation_Loading(true);
+	loadAnimDone = false;
 
-	MatrixSetImage(&mat, image);
-	MatrixUpdate(&mat);
-}
-
-void Animation_DrawNumber(uint8_t number)
-{
-	uint8_t digit0 = number % 10;
-	uint8_t digit1 = number / 10;
-	uint64_t image = 0x00;
-
-	for (uint8_t i = 1; i < 6; ++i) {
-		image |= BITMAP8X8_TO_IMAGE64x1(i, font5x3_numbers[digit1][i]);
-		image |= BITMAP8X8_TO_IMAGE64x1(i, font5x3_numbers[digit0][i]) >> 4;
-	}
-
-	MatrixSetImage(&mat, image);
-	MatrixUpdate(&mat);
-}
-
-void Animation_DrawRomanNumber(uint8_t number)
-{
-	number %= 4;
-	if(number != 0)
+	if( state == CONFIG_ROTOR && rotorIndex != (NUM_ROTORS - 1) )
 	{
-		uint64_t image = 0x00;
-		for (uint8_t i = 0; i < 8; ++i) {
-			image |= BITMAP8X8_TO_IMAGE64x1(i, RomanNumbers[number][i]);
+		rotorIndex++;
+	}
+	else
+	{
+		if( state == CONFIG_ROTOR ) {
+			rotorIndex = 0;
 		}
-
-		MatrixSetImage(&mat, image);
-		MatrixUpdate(&mat);
-	}
-}
-
-void Animation_WaitInput()
-{
-	static uint8_t frame = 0;
-	static uint64_t image = 0x00;
-	static delay_t frameDelay;
-
-	if( frame == 0 )
-	{
-		image = 0x1054381000000038;
-		delayInit( &frameDelay, 200 );
-	}
-	if( delayRead(&frameDelay) )
-	{
-		if ( frame > 0 )
+		else if ( state == ENCRYPT )
 		{
-			if ( frame < 3 )
-			{
-				image >>= 8;
-				image |= 0x1000000000000038;
-			}
-			else if ( frame == 3 )
-			{
-				image |= 0x7c;
-			}
-			else if ( frame == 4 )
-			{
-				image |= 0xfe;
-			}
+			PS2KeyAdvanced_DisableInt();
 		}
+		state++;
+		state %= 3;
+	}
 
-		MatrixSetImage(&mat, image);
-		MatrixUpdate(&mat);
-
-		frame++;
-		frame %= 5;
+	switch ( state ) {
+		case ENCRYPT:
+			out = 0;
+			enigma_init( 3, 2, 1, rotorPos[0], rotorPos[1], rotorPos[2] );
+			PS2KeyAdvanced_EnableInt();
+			keyPressed = false;
+			Animation_WaitInput(true);
+			pressMsgDone = Animation_ShiftText(encryptMessage, true);
+			printf( "Modo encriptacion \r\n" );
+			break;
+		case CONFIG_PB:
+			Animation_ShiftText(plugbMessage, true);
+			delayInit( &plugbDelay, PLUGB_DELAY );
+			printf( "Configurando plugboard \r\n" );
+			break;
+		case CONFIG_ROTOR:
+			delayInit( &rotorAnimDelay, ROTOR_ANIM_DELAY );
+			rotorAnimDone = false;
+			printf( "Configurando rotor %d \r\n", rotorIndex + 1);
+			break;
 	}
 }
 
-bool_t Animation_Loading(bool reset)
+static void MEF_Encrypt()
 {
-	static uint8_t frame = 0;
-	static uint8_t i = 2;
-	static delay_t frameDelay;
-
-	if ( reset )
+	if ( PS2KeyAdvanced_available() )
 	{
-		frame = 0;
-		i = 2;
-		delayInit(&frameDelay, 200);
-	}
+		keyPressed = true;
+		uint16_t c = PS2KeyAdvanced_read();
+		if (c > 0) {
+			printf("Value ");
+			if ('A' <= c && c <= 'Z')
+			{
+				printf("%c", c);
+			}
+			else {
+				printf("%x", c);
+			}
+			printf(" - Status Bits ");
+			printf("%x", c >> 8);
+			printf("  Code ");
+			printf("%x", c & 0xFF);
 
-	if ( delayRead(&frameDelay) )
-	{
-		switch (frame) {
-			case 0:
-				Animation_DrawCharacter('|');
-				break;
-			case 1:
-				Animation_DrawCharacter('/');
-				break;
-			case 2:
-				Animation_DrawCharacter('-');
-				break;
-			case 3:
-				Animation_DrawCharacter('\\');
-				i--;
-				break;
-			default:
-				break;
+			if ('A' <= c && c <= 'Z')
+			{
+				out = encrypt_char( PLUGB_GetMapping(c) );
+				out = PLUGB_GetMapping(out);
+				printf(" - out : %c", out);
+				Animation_DrawCharacter(out);
+			}
+
+			printf("\r\n");
 		}
+	}
+	else if ( !keyPressed )
+	{
+		if ( !pressMsgDone )
+		{
+			pressMsgDone = Animation_ShiftText(encryptMessage, false);
+		}
+		else
+		{
+			if ( Animation_WaitInput(false) )
+			{
+				--waitAnimTimes;
+				if ( waitAnimTimes == 0 )
+				{
+					waitAnimTimes = 3;
+					Animation_WaitInput(true);
+					pressMsgDone = false;
+				}
+			}
+		}
+	}
+}
 
-		frame++;
-		frame %= 4;
+static void MEF_ConfigPB()
+{
+	if ( delayRead( &plugbDelay ) )
+	{
+		PLUGB_Scan();
+		printf( "Plugboard: %s \r\n", PLUGB_GetAllMappings() );
+	}
+	Animation_ShiftText(encryptMessage, false);
+}
 
-		return i == 0;  // Retorna true cuando la animación finaliza
+static void MEF_ConfigRotor()
+{
+	if ( !rotorAnimDone && !delayRead(&rotorAnimDelay) ) {
+		Animation_DrawRomanNumber(rotorIndex + 1);
+		return; // No seguimos si no se mostrÃ³ lo suficiente el nro de rotor
+	}
+	else
+	{
+		rotorAnimDone = true;
+		Animation_DrawNumber(rotorPos[rotorIndex] + 1);
 	}
 
-	return false;  // Retorna false si la animación sigue en curso
+    int8_t delta = RotaryEncoder_Read_Blocking();
+    if (delta != 0) {
+        int8_t newPos = rotorPos[rotorIndex] + delta;
+
+        // Asegurar que el nuevo valor estÃ© dentro de los lÃ­mites
+        if (newPos >= 0 && newPos <= 25) {
+            rotorPos[rotorIndex] = newPos;
+            Animation_DrawNumber(newPos + 1);
+        }
+    }
+}
+
+void MEF_Run()
+{
+	if ( loadAnimDone )
+		(*MEF_Behavior[ state ])();
+	else
+		loadAnimDone = Animation_Loading(false);
 }

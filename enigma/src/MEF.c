@@ -16,6 +16,7 @@
 /*=====[Definition macros of private constants]==============================*/
 #define NUM_ROTORS 3
 #define PLUGB_DELAY 500
+#define ROTOR_ANIM_DELAY 700
 
 /* Pins used for data and clock from keyboard */
 #define IRQ_PIN  T_COL2
@@ -35,6 +36,15 @@ static void MEF_ConfigPB();
 static void (*MEF_Behavior[])(void) = { MEF_Encrypt, MEF_ConfigPB, MEF_ConfigRotor };
 
 static delay_t plugbDelay;
+static delay_t rotorAnimDelay;
+static bool_t keyPressed = false;
+static bool_t pressMsgDone = false;
+static uint8_t waitAnimTimes = 3;
+static bool_t loadAnimDone = true;
+static bool_t rotorAnimDone = false;
+
+static char* const plugbMessage = "PLUG ";
+static char* const encryptMessage = "PRESS A KEY ";
 
 static uint8_t rotorIndex = 0;
 static uint8_t rotorPos[NUM_ROTORS] = { 0 };
@@ -43,20 +53,26 @@ static char out;
 
 void MEF_Init()
 {
-	state = ENCRYPT;
-
-	enigma_init(3, 2, 1, 0, 0, 0);
-
 	PLUGB_Init();
 
 	RotaryEncoder_Init();
+	delayInit( &rotorAnimDelay, 500 );
 
 	PS2KeyAdvanced_begin(DATA_PIN, IRQ_PIN, 0);
 
 	Animation_Init();
+
+	state = ENCRYPT;
+	out = 0;
+	enigma_init( 3, 2, 1, rotorPos[0], rotorPos[1], rotorPos[2] );
+	Animation_WaitInput(true);
+	pressMsgDone = Animation_ShiftText(encryptMessage, true);
 }
 
 void MEF_Update(void) {
+	Animation_Loading(true);
+	loadAnimDone = false;
+
 	if( state == CONFIG_ROTOR && rotorIndex != (NUM_ROTORS - 1) )
 	{
 		rotorIndex++;
@@ -79,19 +95,20 @@ void MEF_Update(void) {
 			out = 0;
 			enigma_init( 3, 2, 1, rotorPos[0], rotorPos[1], rotorPos[2] );
 			PS2KeyAdvanced_EnableInt();
-			Animation_DrawCharacter(0x05);
+			keyPressed = false;
+			Animation_WaitInput(true);
+			pressMsgDone = Animation_ShiftText(encryptMessage, true);
 			printf( "Modo encriptacion \r\n" );
 			break;
 		case CONFIG_PB:
-			Animation_DrawCharacter(0x06);
+			Animation_ShiftText(plugbMessage, true);
 			delayInit( &plugbDelay, PLUGB_DELAY );
 			printf( "Configurando plugboard \r\n" );
 			break;
 		case CONFIG_ROTOR:
-			Animation_DrawNumber(rotorPos[rotorIndex] + 1);
+			delayInit( &rotorAnimDelay, ROTOR_ANIM_DELAY );
+			rotorAnimDone = false;
 			printf( "Configurando rotor %d \r\n", rotorIndex + 1);
-			break;
-		default:
 			break;
 	}
 }
@@ -100,6 +117,7 @@ static void MEF_Encrypt()
 {
 	if ( PS2KeyAdvanced_available() )
 	{
+		keyPressed = true;
 		uint16_t c = PS2KeyAdvanced_read();
 		if (c > 0) {
 			printf("Value ");
@@ -126,6 +144,26 @@ static void MEF_Encrypt()
 			printf("\r\n");
 		}
 	}
+	else if ( !keyPressed )
+	{
+		if ( !pressMsgDone )
+		{
+			pressMsgDone = Animation_ShiftText(encryptMessage, false);
+		}
+		else
+		{
+			if ( Animation_WaitInput(false) )
+			{
+				--waitAnimTimes;
+				if ( waitAnimTimes == 0 )
+				{
+					waitAnimTimes = 3;
+					Animation_WaitInput(true);
+					pressMsgDone = false;
+				}
+			}
+		}
+	}
 }
 
 static void MEF_ConfigPB()
@@ -135,10 +173,21 @@ static void MEF_ConfigPB()
 		PLUGB_Scan();
 		printf( "Plugboard: %s \r\n", PLUGB_GetAllMappings() );
 	}
+	Animation_ShiftText(encryptMessage, false);
 }
 
 static void MEF_ConfigRotor()
 {
+	if ( !rotorAnimDone && !delayRead(&rotorAnimDelay) ) {
+		Animation_DrawRomanNumber(rotorIndex + 1);
+		return; // No seguimos si no se mostró lo suficiente el nro de rotor
+	}
+	else
+	{
+		rotorAnimDone = true;
+		Animation_DrawNumber(rotorPos[rotorIndex] + 1);
+	}
+
     int8_t delta = RotaryEncoder_Read_Blocking();
     if (delta != 0) {
         int8_t newPos = rotorPos[rotorIndex] + delta;
@@ -153,5 +202,8 @@ static void MEF_ConfigRotor()
 
 void MEF_Run()
 {
-	(*MEF_Behavior[ state ])();
+	if ( loadAnimDone )
+		(*MEF_Behavior[ state ])();
+	else
+		loadAnimDone = Animation_Loading(false);
 }

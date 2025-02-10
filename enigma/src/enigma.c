@@ -14,15 +14,56 @@
 #define BUTTON_PIN TEC1
 #define LED_PERIOD 1000
 
+#define CHECK_MSEC 10     // Cada cuanto se lee el boton
+#define PRESS_MSEC 50     // Tiempo estable previo a registrar "presionar"
+#define RELEASE_MSEC 50   // Tiempo estable previo a registrar "soltar"
+
 /*=====[Definitions of extern global variables]==============================*/
 extern pinInitGpioLpc4337_t gpioPinsInit[];
 
 /*=====[Definitions of public global variables]==============================*/
 
 /*=====[Definitions of private global variables]=============================*/
-volatile uint8_t buttonPressed = 0;
 
-static void set_button_int()
+void debounceSwitch(bool_t *key_changed, bool_t *key_pressed)
+{
+	static uint8_t count = RELEASE_MSEC / CHECK_MSEC;
+	static bool_t debouncedKeyPress = false;
+
+	bool_t rawState;
+
+	*key_changed = false;
+	*key_pressed = debouncedKeyPress;
+
+	rawState = gpioRead(BUTTON_PIN);
+
+	if (rawState == debouncedKeyPress)
+	{
+		// setear el timer que permite cambiar el estado actual.
+		if (debouncedKeyPress)
+			count = RELEASE_MSEC / CHECK_MSEC;
+		else
+			count = PRESS_MSEC / CHECK_MSEC;
+	}
+	else
+	{
+		// 'key' cambió - espera un nuevo estado para volver a estable.
+		if (--count == 0)
+		{
+			// el timer expiró - se realiza el cambio.
+			debouncedKeyPress = rawState;
+			*key_changed = true;              // se avisa que se cambio el estado
+			*key_pressed = debouncedKeyPress; // se pasa el estado al que cambio
+			// y ahora se resetea el timer.
+			if (debouncedKeyPress)
+				count = RELEASE_MSEC / CHECK_MSEC;
+			else
+				count = PRESS_MSEC / CHECK_MSEC;
+		}
+	}
+}
+
+static void configButton()
 {
 	Chip_SCU_PinMux(
 			gpioPinsInit[BUTTON_PIN].pinName.port,
@@ -31,17 +72,6 @@ static void set_button_int()
 			SCU_MODE_FUNC0
 		);
 	Chip_GPIO_SetDir( LPC_GPIO_PORT, 0, ( 1 << 4 ), 0 );
-
-	// Setup interruption in channel 0
-	Chip_SCU_GPIOIntPinSel( 1, gpioPinsInit[BUTTON_PIN].gpio.port, gpioPinsInit[BUTTON_PIN].gpio.pin );
-
-	Chip_PININT_ClearIntStatus( LPC_GPIO_PIN_INT, PININTCH(1) ); // Borra posible pending de la IRQ
-	Chip_PININT_SetPinModeEdge( LPC_GPIO_PIN_INT, PININTCH(1) ); // Selecciona activo por flanco (edge-sensitive)
-	Chip_PININT_EnableIntLow( LPC_GPIO_PIN_INT, PININTCH(1) ); // Selecciona activo por flanco descendente
-
-	//NVIC_SetPriority(PIN_INT1_IRQn, 7);
-	NVIC_ClearPendingIRQ( PIN_INT1_IRQn );
-	NVIC_EnableIRQ( PIN_INT1_IRQn );
 }
 
 /*=====[Main function, program entry point after power on or reset]==========*/
@@ -49,18 +79,27 @@ static void set_button_int()
 int main(void) {
 	// ----- Setup -----------------------------------
 	boardInit();
-	set_button_int();
+	configButton();
 	MEF_Init();
 
 	delay_t ledDelay;
 	delayInit( &ledDelay, LED_PERIOD/2 );
 
+	tick_t checkTime = tickRead(); 	// Ultimo tick en el que fue observado el pulsador
+	bool_t keyChanged; 	// Almacena el estado actual sin rebote del pulsador.
+	bool_t keyPressed; 	// Indica si el pulsador cambió de un estado a otro.
+
 	// ----- Repeat for ever -------------------------
 	while ( true ) {
-		if( buttonPressed )
+		if ( tickRead() - checkTime > CHECK_MSEC )
 		{
-			MEF_Update();
-			buttonPressed = 0;
+			checkTime = tickRead();
+			debounceSwitch(&keyChanged, &keyPressed);
+			if (keyChanged == true && keyPressed == false)
+			{
+				// Hacer tarea cuando se presiono y solto el boton
+				MEF_Update();
+			}
 		}
 
 		if( delayRead( &ledDelay ) )
@@ -75,13 +114,4 @@ int main(void) {
 	// microcontroller and is not called by any Operating System, as in the
 	// case of a PC program.
 	return 0;
-}
-
-void GPIO1_IRQHandler()
-{
-	if ( Chip_PININT_GetFallStates(LPC_GPIO_PIN_INT) & PININTCH1 ) {
-
-		Chip_PININT_ClearIntStatus( LPC_GPIO_PIN_INT, PININTCH1 ); //Borramos el flag de interrupcion
-		buttonPressed = 1;
-	}
 }
