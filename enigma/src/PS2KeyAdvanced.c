@@ -137,8 +137,13 @@
 #include "PS2KeyAdvanced.h"
 #include "PS2KeyCode.h"
 #include "PS2KeyTable.h"
+#include "sapi.h"
 
+/* used for pin configuration */
 extern pinInitGpioLpc4337_t gpioPinsInit[];
+
+/* used for timeout */
+extern tick_t tickRateMS;
 
 // Private function declarations
 void send_bit(void);
@@ -224,19 +229,21 @@ void GPIO0_IRQHandler(void) {
 		if (_ps2mode & _TX_MODE)
 			send_bit();
 		else {
-			static uint32_t prev_ms = 0;
-			uint32_t now_ms;
+			static tick_t prev_ticks = 0;
+			tick_t now_ticks;
 			uint8_t val, ret;
 
 			val = gpioRead(PS2_DataPin);
 
 			/* timeout catch for glitches reset everything */
-//			now_ms = millis();
-//			if (now_ms - prev_ms > 250) {
-//				_bitcount = 0;
-//				_shiftdata = 0;
-//			}
-//			prev_ms = now_ms;
+			now_ticks = tickRead();
+			uint32_t elapsed_ms = (now_ticks - prev_ticks) * tickRateMS;
+			if (elapsed_ms > 250) {
+			    _bitcount = 0;
+			    _shiftdata = 0;
+			}
+			prev_ticks = now_ticks;
+
 			_bitcount++;             // Now point to next bit
 			switch (_bitcount) {
 			case 1: // Start bit
@@ -946,7 +953,7 @@ void PS2KeyAdvanced_begin(gpioMap_t dataPin, gpioMap_t irqPin, uint8_t intChanne
 	gpioInit( PS2_IrqPin, GPIO_INPUT_PULLUP ); /* Setup Clock pin */
 
 	// Setup clock interruption in channel 0
-	Chip_SCU_GPIOIntPinSel( 0, gpioPinsInit[PS2_IrqPin].gpio.port,
+	Chip_SCU_GPIOIntPinSel( PS2_IntChannel, gpioPinsInit[PS2_IrqPin].gpio.port,
 			gpioPinsInit[PS2_IrqPin].gpio.pin );
 
 	Chip_PININT_ClearIntStatus( LPC_GPIO_PIN_INT, PININTCH(PS2_IntChannel) );	// Borra posible pending de la IRQ
