@@ -8,6 +8,8 @@
 #define ROTATE 26
 
 const char *alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const char* plugboardMappings = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 const char *rotor_ciphers[] = {
     "EKMFLGDQVZNTOWYHXUSPAIBRCJ",
     "AJDKSIRUXBLHWTMCQGZNPYFVOE",
@@ -102,19 +104,29 @@ int rotor_reverse(struct Rotor *rotor, int index) {
 
 static struct Enigma machine = {};
 
-void enigma_init(int rotor1 ,int rotor2 ,int rotor3, int offset1, int offset2, int offset3)
+void EnigmaAPI_Init(int rotor1 ,int rotor2 ,int rotor3, int reflector, int offset1, int offset2, int offset3)
 {
     // Configurar Enigma
 	machine.numrotors = 3;
-    machine.reflector = reflectors[1]; // Usamos el reflector B
+    machine.reflector = reflectors[reflector];
     machine.rotors[0] = new_rotor(&machine, rotor1, offset1);
     machine.rotors[1] = new_rotor(&machine, rotor2, offset2);
     machine.rotors[2] = new_rotor(&machine, rotor3, offset3);
 
 }
 
+unsigned int EnigmaAPI_GetRotorValue(unsigned int rotor)
+{
+	return machine.rotors[rotor].offset;
+}
+
+void EnigmaAPI_SetPlugboardMapping(const char* mapping)
+{
+	plugboardMappings = mapping;
+}
+
 //PENDING: manejar error por ingreso de un caracter invalido sin usar printf
-char encrypt_char(char character)
+char EnigmaAPI_EncryptChar(char character)
 {
     int i, index;
 
@@ -123,6 +135,7 @@ char encrypt_char(char character)
     }
 
     character = toupper(character);
+    character = plugboardMappings[character - 'A'];
     index = str_index(alpha, character);
 
     // Ciclar el primer rotor antes de continuar
@@ -154,6 +167,8 @@ char encrypt_char(char character)
         index = rotor_reverse(&machine.rotors[i], index);
     }
 
+    index = alpha[index] - 'A';
+
     // Salida del caracter cifrado
-    return alpha[index];
+    return plugboardMappings[ index ];
 }

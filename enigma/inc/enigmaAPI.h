@@ -1,8 +1,9 @@
 #ifndef __ENIGMA_H_
 #define __ENIGMA_H_
 
-void enigma_init(int rotor1 ,int rotor2 ,int rotor3, int offset1, int offset2, int offset3);
-char encrypt_char(char character);
+void EnigmaAPI_Init(int rotor1 ,int rotor2 ,int rotor3, int reflector, int offset1, int offset2, int offset3);
+char EnigmaAPI_EncryptChar(char character);
+void EnigmaAPI_SetPlugboardMapping(const char* mapping);
+unsigned int EnigmaAPI_GetRotorValue(unsigned int rotor);
 
-
-#endif /*__MY_PROGRAM_H_*/
+#endif /* __ENIGMA_H_ */

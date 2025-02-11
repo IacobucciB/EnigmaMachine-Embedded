@@ -64,7 +64,7 @@ void MEF_Init()
 
 	state = ENCRYPT;
 	out = 0;
-	enigma_init( 3, 2, 1, rotorPos[0], rotorPos[1], rotorPos[2] );
+	EnigmaAPI_Init( 3, 2, 1, 1, rotorPos[0], rotorPos[1], rotorPos[2] );
 	Animation_WaitInput(true);
 	pressMsgDone = Animation_ShiftText(encryptMessage, true);
 }
@@ -93,7 +93,8 @@ void MEF_Update(void) {
 	switch ( state ) {
 		case ENCRYPT:
 			out = 0;
-			enigma_init( 3, 2, 1, rotorPos[0], rotorPos[1], rotorPos[2] );
+			EnigmaAPI_SetPlugboardMapping( PLUGB_GetAllMappings() );
+			EnigmaAPI_Init( 3, 2, 1, 1, rotorPos[0], rotorPos[1], rotorPos[2] );
 			PS2KeyAdvanced_EnableInt();
 			keyPressed = false;
 			Animation_WaitInput(true);
@@ -106,6 +107,7 @@ void MEF_Update(void) {
 			printf( "Configurando plugboard \r\n" );
 			break;
 		case CONFIG_ROTOR:
+			rotorPos[rotorIndex] = EnigmaAPI_GetRotorValue(rotorIndex);
 			delayInit( &rotorAnimDelay, ROTOR_ANIM_DELAY );
 			rotorAnimDone = false;
 			printf( "Configurando rotor %d \r\n", rotorIndex + 1);
@@ -117,7 +119,6 @@ static void MEF_Encrypt()
 {
 	if ( PS2KeyAdvanced_available() )
 	{
-		keyPressed = true;
 		uint16_t c = PS2KeyAdvanced_read();
 		if (c > 0) {
 			printf("Value ");
@@ -135,8 +136,8 @@ static void MEF_Encrypt()
 
 			if ('A' <= c && c <= 'Z')
 			{
-				out = encrypt_char( PLUGB_GetMapping(c) );
-				out = PLUGB_GetMapping(out);
+				keyPressed = true;
+				out = EnigmaAPI_EncryptChar(c);
 				printf(" - out : %c", out);
 				Animation_DrawCharacter(out);
 			}
