@@ -23,7 +23,7 @@
 	It may not be compatible with other architectures without additional modifications.
 
 	### ASSUMPTION: Only one PS/2 keyboard is connected.
-	
+
 	This implementation is designed for Latin-style keyboards using Scan Code Set 2, which is the default set for PS/2 keyboards on power-up.
 
 	### MAIN FUNCTIONALITY:
@@ -33,71 +33,71 @@
 
 	--- DETAILED LIBRARY EXPLANATION ---
 
-	### Overview  
-	This is a fully-featured PS/2 keyboard library that supports:  
-	- All function and movement keys, including multilingual layouts.  
-	- Parity checking for sent/received data and request-based keyboard resends.  
-	- Automatic handling of the PS/2 protocol for **RESEND** and **ECHO** commands.  
-	- Functions to:  
-	- Retrieve the active scancode set (read-only).  
-	- Control LED indicators and lock states.  
-	- Read the keyboard ID.  
-	- Reset the keyboard.  
-	- Send **ECHO** commands.  
-	- Manage **NUM LOCK**, **CAPS LOCK**, and **SCROLL LOCK** states and LEDs.  
+	### Overview
+	This is a fully-featured PS/2 keyboard library that supports:
+	- All function and movement keys, including multilingual layouts.
+	- Parity checking for sent/received data and request-based keyboard resends.
+	- Automatic handling of the PS/2 protocol for **RESEND** and **ECHO** commands.
+	- Functions to:
+	- Retrieve the active scancode set (read-only).
+	- Control LED indicators and lock states.
+	- Read the keyboard ID.
+	- Reset the keyboard.
+	- Send **ECHO** commands.
+	- Manage **NUM LOCK**, **CAPS LOCK**, and **SCROLL LOCK** states and LEDs.
 	- Manage **NUM LOCK** and **SCROLL LOCK** internally
 
-	### Key Data Representation  
-	Keys are returned as a 16-bit (`uint16_t`) value containing:  
-	- **Make/Break** status.  
-	- **CAPS LOCK** state.  
-	- **Modifier keys**: SHIFT, CTRL, ALT, ALT GR, and GUI.  
-	- **Function key flag**, indicating non-printable characters.  
-	- **8-bit key code**.	
+	### Key Data Representation
+	Keys are returned as a 16-bit (`uint16_t`) value containing:
+	- **Make/Break** status.
+	- **CAPS LOCK** state.
+	- **Modifier keys**: SHIFT, CTRL, ALT, ALT GR, and GUI.
+	- **Function key flag**, indicating non-printable characters.
+	- **8-bit key code**.
 
 	#### Key Code Ranges (Lower Byte of `uint16_t`). See PS2Keyboard.h for details
-	- `0x00` → Invalid/Error.  
-	- `0x01 - 0x1F` → Function keys (e.g., CAPS, SHIFT, ALT, ENTER, DEL).  
-	- `0x1A - 0x1F` → Function keys with ASCII control codes (DEL, BS, TAB, ESC, ENTER, SPACE).  
-	- `0x20 - 0x60` → Printable characters:  
-		- `0x30 - 0x39` → Digits (`0-9`).  
-		- `0x41 - 0x5A` → Uppercase letters (`A-Z`).
-	- `0x8B` → Extra European key.  
-	- `0x61 - 0xA0` (less 0x8B) → Function and special keys:  
-		- `0x61 - 0x78` → Function keys (`F1 - F24`).  
-		- `0x79 - 0x8A` → Multimedia keys.  
-		- `0x8C - 0x8E` → ACPI power keys.  
-		- `0x91 - 0xA0` → Special multilingual keys (`F1` and `F2` included).  
-	- `0xA8 - 0xFF` → Keyboard communication commands (`F1` and `F2` have special multilingual codes).  
+	- `0x00` -> Invalid/Error.
+	- `0x01 - 0x1F` -> Function keys (e.g., CAPS, SHIFT, ALT, ENTER, DEL).
+	- `0x1A - 0x1F` -> Function keys with ASCII control codes (DEL, BS, TAB, ESC, ENTER, SPACE).
+	- `0x20 - 0x60` -> Printable characters:
+		- `0x30 - 0x39` -> Digits (`0-9`).
+		- `0x41 - 0x5A` -> Uppercase letters (`A-Z`).
+	- `0x8B` -> Extra European key.
+	- `0x61 - 0xA0` (less 0x8B) -> Function and special keys:
+		- `0x61 - 0x78` -> Function keys (`F1 - F24`).
+		- `0x79 - 0x8A` -> Multimedia keys.
+		- `0x8C - 0x8E` -> ACPI power keys.
+		- `0x91 - 0xA0` -> Special multilingual keys (`F1` and `F2` included).
+	- `0xA8 - 0xFF` -> Keyboard communication commands (`F1` and `F2` have special multilingual codes).
 
-	These ranges allow for key detection and efficient conversion to ASCII/UTF-8 while filtering out non-printable keys.  
+	These ranges allow for key detection and efficient conversion to ASCII/UTF-8 while filtering out non-printable keys.
 
-	### Key Flags (Upper Byte of `uint16_t`)  
-	Each bit represents a specific key state:  
+	### Key Flags (Upper Byte of `uint16_t`)
+	Each bit represents a specific key state:
 
-	| Define Name     | Bit Position  | Description |  
-	|-----------------|---------------|-------------|  
-	| `PS2_BREAK`     | 15 (MSB)      | `1` = Break key, `0` = Make key |  
-	| `PS2_SHIFT`     | 14            | `1` = SHIFT key pressed |  
-	| `PS2_CTRL`      | 13            | `1` = CTRL key pressed |  
-	| `PS2_CAPS`      | 12            | `1` = CAPS LOCK is ON |  
-	| `PS2_ALT`       | 11            | `1` = Left ALT key pressed |  
-	| `PS2_ALT_GR`    | 10            | `1` = Right ALT (ALT GR) key pressed |  
-	| `PS2_GUI`       | 9             | `1` = GUI key pressed |  
-	| `PS2_FUNCTION`  | 8             | `1` = Function key or non-printable character (SPACE, TAB, ENTER included), `0` = Standard character key |  
+	| Define Name     | Bit Position  | Description |
+	|-----------------|---------------|-------------|
+	| `PS2_BREAK`     | 15 (MSB)      | `1` = Break key, `0` = Make key |
+	| `PS2_SHIFT`     | 14            | `1` = SHIFT key pressed |
+	| `PS2_CTRL`      | 13            | `1` = CTRL key pressed |
+	| `PS2_CAPS`      | 12            | `1` = CAPS LOCK is ON |
+	| `PS2_ALT`       | 11            | `1` = Left ALT key pressed |
+	| `PS2_ALT_GR`    | 10            | `1` = Right ALT (ALT GR) key pressed |
+	| `PS2_GUI`       | 9             | `1` = GUI key pressed |
+	| `PS2_FUNCTION`  | 8             | `1` = Function key or non-printable character (SPACE, TAB, ENTER included), `0` = Standard character key |
 
-	### Error Codes  
-	Most functions return `0x0000` or `0xFFFF` to indicate errors. Other notable return values (bottom byte):  
-	- `0xAA` → Keyboard reset successfully and passed power-up tests. It will happen if keyboard plugged in after code start.
-	- `0xFC` → Keyboard general error or power-up failure.  
+	### Error Codes
+	Most functions return `0x0000` or `0xFFFF` to indicate errors. Other notable return values (bottom byte):
+	- `0xAA` -> Keyboard reset successfully and passed power-up tests. It will happen if keyboard plugged in after code start.
+	- `0xFC` -> Keyboard general error or power-up failure.
 
-	### Custom Key Mapping  
+	### Custom Key Mapping
 	Special key combinations, such as `<CTRL> + <ENTER>`, may require custom handling. The recommended approach is to use the **PS2KeyTable** library and extend it with a custom key mapping table. If modifying the base functionality, it is advised to create a separate library instead of altering this one to maintain compatibility.
 
 	### Related files:
-	- **PS2Keyboard.h** → Contains returned key definitions and accessible mappings.
-	- **PS2KeyCode.h** → Contains original PS/2 keyboard scancodes used by this library.
-	- **PS2KeyTable.h** → Provides mapping tables for converting scancodes into ASCII/UTF-8 characters.
+	- **PS2Keyboard.h** -> Contains returned key definitions and accessible mappings.
+	- **PS2KeyCode.h** -> Contains original PS/2 keyboard scancodes used by this library.
+	- **PS2KeyTable.h** -> Provides mapping tables for converting scancodes into ASCII/UTF-8 characters.
 
 	### LICENSE:
 	This software is open-source and distributed under the GNU Lesser General Public License (LGPL).
@@ -134,7 +134,7 @@ const uint8_t PROGMEM control_flags[] = {
 const uint8_t control_flags[] = {
 #endif
     _SHIFT, _SHIFT, _CTRL, _CTRL,
-    _ALT, _ALT_GR, _GUI, _GUI 
+    _ALT, _ALT_GR, _GUI, _GUI
 };
 
 // ------------------------------
@@ -143,9 +143,9 @@ const uint8_t control_flags[] = {
 
 /*=====[Definitions of private global variables]=============================*/
 
-/* 
+/*
  * _ps2mode: Stores various PS/2 communication flags.
- * 
+ *
  * Bit 7 - _PS2_BUSY:       Set when the bus is active (RX/TX in progress).
  * Bit 6 - _TX_MODE:        1 = Transmitting, 0 = Receiving (default).
  * Bit 5 - _BREAK_KEY:      Set when a break code (key release) is detected.
@@ -156,7 +156,7 @@ const uint8_t control_flags[] = {
  */
 volatile uint8_t _ps2mode;
 
-/* 
+/*
  * RX Buffers and Variables (Updated via Interrupts)
  */
 volatile uint16_t _rx_buffer[_RX_BUFFER_SIZE];  // Circular buffer for received keyboard data
@@ -167,7 +167,7 @@ volatile uint8_t _bitcount;  // Tracks the bit count for received data
 volatile uint8_t _shiftdata; // Stores the received/sent data
 volatile uint8_t _parity;    // Stores parity bit status for validation
 
-/* 
+/*
  * TX Buffers and Variables (For Sending Commands to Keyboard)
  */
 volatile uint8_t _tx_buff[_TX_BUFFER_SIZE];  // Buffer for outgoing keyboard commands
@@ -183,7 +183,7 @@ volatile uint8_t _tx_ready;       // TX status flag for managing transmission ty
  * Bit 0 - _COMMAND   (0x01): Regular command processing.
  */
 
-/* 
+/*
  * Output Key Buffering (For Processed Keystrokes)
  */
 uint16_t _key_buffer[_KEY_BUFF_SIZE];  // Circular buffer for translated key events
@@ -196,15 +196,14 @@ uint8_t _mode = 0; 	// Keyboard Output Mode Flags
  * Bit 3 - _NO_BREAKS  (0x08): Disables break codes (key release events).
  */
 
-/* 
+/*
  * PS/2 Hardware Pin Configuration
  * (Set during initialization)
  */
 uint8_t PS2_DataPin;     // Data line pin
 uint8_t PS2_IrqPin;      // IRQ line pin
-uint8_t PS2_IntChannel;  // Interrupt channel used for communication
 
-/* 
+/*
  * Keyboard Lock and Status Variables
  */
 uint8_t PS2_led_lock = 0;      // Stores the current LED lock status (Caps Lock, Num Lock, etc.)
@@ -212,7 +211,7 @@ uint8_t PS2_lockstate[4];      // Tracks whether locks had break events
 uint8_t PS2_keystatus;         // Stores the current CAPS/Shift/Alt/etc. status
 
 /*------------------ Code starts here -------------------------*/
- 
+
 /**
  * @brief Interrupt Service Routine for the PS/2 keyboard external interrupt.
  *
@@ -223,10 +222,10 @@ uint8_t PS2_keystatus;         // Stores the current CAPS/Shift/Alt/etc. status
  *   and stores valid bytes in the receive buffer.
  */
 void GPIO0_IRQHandler(void) {
-    // Check if the interrupt was triggered by PININTCH (PS/2 clock)
-    if (Chip_PININT_GetFallStates(LPC_GPIO_PIN_INT) & PININTCH(PS2_IntChannel)) {
+    // Check if the interrupt was triggered by the clock pin
+    if (Chip_PININT_GetFallStates(LPC_GPIO_PIN_INT) & PININTCH(0)) {
         // Clear the interrupt flag
-        Chip_PININT_ClearIntStatus(LPC_GPIO_PIN_INT, PININTCH(PS2_IntChannel));
+        Chip_PININT_ClearIntStatus(LPC_GPIO_PIN_INT, PININTCH(0));
 
         // If in transmit mode, send the next bit
         if (_ps2mode & _TX_MODE) {
@@ -411,7 +410,7 @@ static uint8_t decode_key(uint8_t value) {
  * This function sends a series of bits (start bit, data bits, parity bit, stop bit, and acknowledgment bit)
  * to the PS/2 keyboard. It handles bit-level communication by shifting the data and setting the appropriate
  * GPIO pin states for each bit in the sequence.
- * 
+ *
  * The data pin direction should already be set before calling this function.
  * The start bit is already set, and the `_bitcount` and `_parity` should be initialized before this function is called.
  */
@@ -480,27 +479,27 @@ static void send_bit(void) {
  *
  * This function takes a byte (command), sets up the necessary variables, and begins the data transmission process to the PS/2 keyboard.
  * The calling code must ensure that the line is idle and ready to send before invoking this function.
- * 
+ *
  * While this function introduces long delays, these delays will stop the interrupt source (keyboard) externally when the clock is held low.
- * 
+ *
  * The transmission process involves managing the _tx_ready flags, which determine the type of command being sent:
  * - _HANDSHAKE: Command part of receiving data, e.g., ECHO, RESEND.
  * - _COMMAND: Other commands not related to receiving data.
- * 
+ *
  * A key difference is that _bytes_expected is NOT altered in _HANDSHAKE mode, but is updated in command mode with the expected number of response bytes.
- * 
+ *
  * @param command The byte to be transmitted to the PS/2 keyboard.
  */
 static void send_now(uint8_t command) {
     _shiftdata = command;  // Prepare the command byte for transmission
     _now_send = command;   // Save the command byte for later (used for resend/echo)
-    
+
 #if defined( PS2_CLEAR_PENDING_IRQ )
     _bitcount = 0;  // Reset bit count to handle any pending interrupts on AVR/SAM
 #else
     _bitcount = 1;  // Normal processors: start with bit count 1
 #endif
-    
+
     _parity = 0;  // Reset parity counter
     _ps2mode |= _TX_MODE + _PS2_BUSY;  // Set transmission mode and mark PS2 as busy
 
@@ -512,8 +511,8 @@ static void send_now(uint8_t command) {
 
     /* STOP interrupt handler */
     // Disabling interrupt temporarily to prevent interference while preparing the data line
-    NVIC_ClearPendingIRQ( PIN_INT0_IRQn + PS2_IntChannel );
-    NVIC_DisableIRQ( PIN_INT0_IRQn + PS2_IntChannel );
+    NVIC_ClearPendingIRQ( PIN_INT0_IRQn + 0 );
+    NVIC_DisableIRQ( PIN_INT0_IRQn + 0 );
 
     // Set the data pin to output and set it high (idle state)
     gpioWrite(PS2_DataPin, ON);
@@ -538,8 +537,8 @@ static void send_now(uint8_t command) {
 
     /* Restart interrupt handler */
     // Re-enable the interrupt to allow further clock signals to be sent
-    NVIC_ClearPendingIRQ( PIN_INT0_IRQn + PS2_IntChannel );
-    NVIC_EnableIRQ( PIN_INT0_IRQn + PS2_IntChannel );
+    NVIC_ClearPendingIRQ( PIN_INT0_IRQn + 0 );
+    NVIC_EnableIRQ( PIN_INT0_IRQn + 0 );
 
     // Wait for clock interrupt to continue sending data
 }
@@ -615,13 +614,13 @@ static int16_t send_next(void) {
  * the byte is written to the buffer and the head pointer is updated. If the buffer is
  * full, the function returns an error code (-4) indicating a buffer overrun.
  * If a byte is added successfully, it returns 1.
- * 
- * The buffer is used to store data that is to be sent over the PS2 interface. 
+ *
+ * The buffer is used to store data that is to be sent over the PS2 interface.
  * If the byte value is `PS2_KEY_IGNORE`, it signifies that the system is waiting for a response,
  * and this should be used for each byte expected in the response.
- * 
+ *
  * @param val The byte to be sent to the TX buffer.
- * 
+ *
  * @retval 1 If the byte was successfully written to the buffer.
  * @retval -4 If the buffer is full and the byte cannot be written (buffer overrun).
  */
@@ -692,11 +691,11 @@ static uint8_t key_available() {
 /**
  * @brief Translate a PS2 keyboard scan code sequence into a key code data.
  *
- * This function reads a sequence of bytes from the RX buffer and translates it into 
- * a corresponding key code. The function is designed to process key events when the 
- * data is read from the buffer. It processes the buffer in a non-interrupt context, 
+ * This function reads a sequence of bytes from the RX buffer and translates it into
+ * a corresponding key code. The function is designed to process key events when the
+ * data is read from the buffer. It processes the buffer in a non-interrupt context,
  * called from the read function.
- * 
+ *
  * Key points:
  * - The PAUSE key (_E1_MODE) is treated as a special case.
  * - Command responses are not translated but returned as raw data.
@@ -706,8 +705,8 @@ static uint8_t key_available() {
  * - Break codes are handled appropriately.
  *
  * @return A translated key code with the PS2 keystatus encoded in the upper byte.
- *         - 0 if no valid key is processed, empty buffer, or ignored key. 🐍
- */ 
+ *         - 0 if no valid key is processed, empty buffer, or ignored key.
+ */
 static uint16_t translate(void) {
     uint8_t index, length, data;
     uint16_t retdata;
@@ -715,20 +714,20 @@ static uint16_t translate(void) {
     // Get the next character from the buffer
     // Check if there's anything to fetch
     index = _tail;
-    
+
     // If the buffer is empty, return 0
     if (index == _head)
         return 0;
-    
+
     index++;
-    
+
     // Wrap around the index if it exceeds buffer size
     if (index >= _RX_BUFFER_SIZE)
         index = 0;
-    
+
     // Update the tail pointer to the new index
     _tail = index;
-    
+
     // Get the flags byte (break modes, etc.)
     data = _rx_buffer[index] & 0xFF; // Lower byte for data
     index = (_rx_buffer[index] & 0xFF00) >> 8; // Upper byte for flags
@@ -829,7 +828,7 @@ static uint16_t translate(void) {
                     set_lock(); // Update the lock state
                 }
             }
-        } 
+        }
         // Process modifier keys like SHIFT, CTRL, ALT, etc.
         else if (retdata >= PS2_KEY_L_SHIFT && retdata <= PS2_KEY_R_GUI) {
             #if defined( PS2_REQUIRES_PROGMEM )
@@ -843,7 +842,7 @@ static uint16_t translate(void) {
                 retdata = PS2_KEY_IGNORE; // Ignore repeated modifier keys
             else
                 PS2_keystatus |= index; // Set the modifier key status
-        } 
+        }
         // Handle numeric keypad keys only if numlock is active or SHIFT is pressed
         else if (retdata >= PS2_KEY_KP0 && retdata <= PS2_KEY_KP_DOT)
             if (!(PS2_led_lock & PS2_LOCK_NUM) || (PS2_keystatus & _SHIFT)) {
@@ -901,7 +900,7 @@ static void set_lock() {
  */
 void PS2Keyboard_Echo(void) {
     send_byte(PS2_KC_ECHO);             // Send the ECHO command (0xEE)
-    
+
     // Wait for a response; if the keyboard is idle, start transmission
     if ((send_byte(PS2_KEY_IGNORE)))
         send_next();
@@ -952,36 +951,36 @@ void PS2Keyboard_GetScanCodeSet(void) {
 
 /**
  * @brief Retrieves the current status of the lock keys.
- * 
- * Returns the current status of the lock keys (NUM, CAPS, SCROLL, and EXTRA).  
+ *
+ * Returns the current status of the lock keys (NUM, CAPS, SCROLL, and EXTRA).
  * Each bit in the returned byte corresponds to a specific lock key.
  *   - PS2_LOCK_SCROLL
  *   - PS2_LOCK_NUM
  *   - PS2_LOCK_CAPS
  *   - PS2_LOCK_EXTRA (rarely used)
- *  
- * Use the macros (PS2_LOCK_NUM, PS2_LOCK_CAPS, etc.) defined in PS2Keyboard.h to  
- * mask out the specific lock key you need.  
- *  
- * @return A byte where each bit represents the status of a lock key.  
- */  
-uint8_t PS2Keyboard_GetLock() {  
-    return (PS2_led_lock);  
+ *
+ * Use the macros (PS2_LOCK_NUM, PS2_LOCK_CAPS, etc.) defined in PS2Keyboard.h to
+ * mask out the specific lock key you need.
+ *
+ * @return A byte where each bit represents the status of a lock key.
+ */
+uint8_t PS2Keyboard_GetLock() {
+    return (PS2_led_lock);
 }
 
 
 /**
- * @brief Sets the current status of the lock keys (NUM, CAPS, SCROLL, and EXTRA)  
- * and updates the keyboard LEDs accordingly.  
- *  
- * The provided `code` parameter is masked to 4 bits to ensure compatibility  
- * with keyboards that might support an additional lock key.  
- *  
- * The function also updates `PS2_keystatus`, ensuring the internal state  
- * reflects the Caps Lock status correctly.  
- *  
- * @param code A byte where each bit represents the desired lock state.  
- *             See PS2Keyboard.h for the corresponding macros.  
+ * @brief Sets the current status of the lock keys (NUM, CAPS, SCROLL, and EXTRA)
+ * and updates the keyboard LEDs accordingly.
+ *
+ * The provided `code` parameter is masked to 4 bits to ensure compatibility
+ * with keyboards that might support an additional lock key.
+ *
+ * The function also updates `PS2_keystatus`, ensuring the internal state
+ * reflects the Caps Lock status correctly.
+ *
+ * @param code A byte where each bit represents the desired lock state.
+ *             See PS2Keyboard.h for the corresponding macros.
  */
 void PS2Keyboard_SetLock(uint8_t code) {
     code &= 0xF;                // Mask to 4 bits (supporting extra LED if present)
@@ -994,11 +993,11 @@ void PS2Keyboard_SetLock(uint8_t code) {
 
 /**
  * @brief Configures whether the library should process break key codes (key releases).
- * 
- * The keyboard always sends both make (press) and break (release) codes, but this setting 
- * allows the library to ignore break codes if desired. When enabled, only make codes 
+ *
+ * The keyboard always sends both make (press) and break (release) codes, but this setting
+ * allows the library to ignore break codes if desired. When enabled, only make codes
  * will be processed, and break codes will be discarded.
- * 
+ *
  * @param data 1 to ignore break key codes, 0 to process them.
  */
 void PS2Keyboard_SetNoBreak(uint8_t data) {
@@ -1008,13 +1007,13 @@ void PS2Keyboard_SetNoBreak(uint8_t data) {
 
 
 /**
- * @brief Configures whether modifier keys (_CTRL, _ALT, _GUI, _SHIFT) 
+ * @brief Configures whether modifier keys (_CTRL, _ALT, _GUI, _SHIFT)
  *        should send repeated make codes.
- * 
+ *
  * Some applications may want to suppress repeated make codes for modifier keys.
  * When enabled, the library will only send a single make code when a modifier
  * key is pressed and held.
- * 
+ *
  * @param data 1 to disable repeated make codes, 0 to allow them.
  */
 void PS2Keyboard_SetNoRepeat(uint8_t data) {
@@ -1025,15 +1024,15 @@ void PS2Keyboard_SetNoRepeat(uint8_t data) {
 
 /**
  * @brief Resets the keyboard and clears the internal lock and key status.
- * 
+ *
  * Sends a reset command to the keyboard. The keyboard will respond with:
  * - `0xAA` = PS2_KC_BAT 	(Self-test passed)
  * - `0xFC` = PS2_KC_ERROR 	(Self-test failed)
- * 
- * The function waits for an acknowledgment (ACK) and then waits for the keyboard’s 
- * response indicating the result of the reset.  
- * 
- * Additionally, this function resets the internal LED lock status and key status 
+ *
+ * The function waits for an acknowledgment (ACK) and then waits for the keyboard’s
+ * response indicating the result of the reset.
+ *
+ * Additionally, this function resets the internal LED lock status and key status
  * to match the keyboard’s state after reset.
  */
 void PS2Keyboard_ResetKey() {
@@ -1059,7 +1058,7 @@ void PS2Keyboard_ResetKey() {
  * - The rate (0 to 31), where 0 is 30 CPS and 31 is 2 CPS. The default is 0xB (10.9 CPS).
  * - The delay (0 to 3), specifying the delay before the first repeat (from 0.25s to 1s in 0.25s increments).
  *   The default is 1 (0.5s delay).
- * 
+ *
  * The response from the keyboard is stored in the input buffer and can be read
  * using the appropriate buffer-reading functions.
  *
@@ -1073,13 +1072,13 @@ void PS2Keyboard_ResetKey() {
 int PS2Keyboard_Typematic(uint8_t rate, uint8_t delay) {
     if (rate > 31 || delay > 3)
         return -5;  // Return error if parameters are out of range
-    
+
     send_byte(PS2_KC_RATE);               // Send the command to set typematic rate and delay
     send_byte(PS2_KEY_IGNORE);            // Wait for ACK (Acknowledgement)
     send_byte((delay << 5) + rate);       // Send the delay and rate values
     if ((send_byte(PS2_KEY_IGNORE)))      // Wait for ACK (Acknowledgement)
         send_next();                      // If idle, start the transmission
-    
+
     return 0;  // Return success
 }
 
@@ -1162,13 +1161,13 @@ uint16_t PS2Keyboard_Read()
  * This function resets the internal PS/2 state variables and clears any pending
  * interrupts before enabling the external interrupt associated with the PS/2 clock line.
  */
-void PS2KeyAdvanced_EnableInt()
+void PS2Keyboard_EnableInt()
 {
     ps2_reset();  // Reset internal PS/2 state
 
     // Clear any pending interrupts before enabling
-    NVIC_ClearPendingIRQ(PIN_INT0_IRQn + PS2_IntChannel);
-    NVIC_EnableIRQ(PIN_INT0_IRQn + PS2_IntChannel);
+    NVIC_ClearPendingIRQ(PIN_INT0_IRQn + 0);
+    NVIC_EnableIRQ(PIN_INT0_IRQn + 0);
 }
 
 
@@ -1179,21 +1178,20 @@ void PS2KeyAdvanced_EnableInt()
  * preventing further keyboard data reception. It can be used to temporarily ignore
  * PS/2 signals while processing data.
  */
-void PS2KeyAdvanced_DisableInt()
+void PS2Keyboard_DisableInt()
 {
-    NVIC_DisableIRQ(PIN_INT0_IRQn + PS2_IntChannel);
+    NVIC_DisableIRQ(PIN_INT0_IRQn + 0);
 }
 
 
 // Initializes the PS/2 keyboard interface (see PS2Keyboard.h for details)
-void PS2Keyboard_Init(gpioMap_t dataPin, gpioMap_t irqPin, uint8_t intChannel) {
+void PS2Keyboard_Init(gpioMap_t dataPin, gpioMap_t irqPin) {
     /* Reset internal PS/2 state variables */
     ps2_reset();
 
-    /* Store pin and interrupt channel configuration */
+    /* Store pin configuration */
     PS2_DataPin = dataPin;
     PS2_IrqPin = irqPin;
-    PS2_IntChannel = intChannel;
 
     /* --- GPIO Configuration --- */
     // Configure Data and Clock pins as input with pull-up resistors
@@ -1206,19 +1204,19 @@ void PS2Keyboard_Init(gpioMap_t dataPin, gpioMap_t irqPin, uint8_t intChannel) {
                            gpioPinsInit[PS2_IrqPin].gpio.pin );
 
     // Clear any pending interrupts on the selected channel
-    Chip_PININT_ClearIntStatus( LPC_GPIO_PIN_INT, PININTCH(PS2_IntChannel) );
+    Chip_PININT_ClearIntStatus( LPC_GPIO_PIN_INT, PININTCH(0) );
 
     // Set interrupt to trigger on edge events (instead of level-triggered)
-    Chip_PININT_SetPinModeEdge( LPC_GPIO_PIN_INT, PININTCH(PS2_IntChannel) );
+    Chip_PININT_SetPinModeEdge( LPC_GPIO_PIN_INT, PININTCH(0) );
 
     // Enable interrupt on falling edge (PS/2 clock transitions from HIGH to LOW)
-    Chip_PININT_EnableIntLow( LPC_GPIO_PIN_INT, PININTCH(PS2_IntChannel) );
+    Chip_PININT_EnableIntLow( LPC_GPIO_PIN_INT, PININTCH(0) );
 
     /* --- NVIC (Nested Vectored Interrupt Controller) Configuration --- */
     // Define interrupt priority level (lower values = higher priority)
     const uint8_t PS2_INTERRUPT_PRIORITY = 7;
 
-    NVIC_SetPriority( PIN_INT0_IRQn + PS2_IntChannel, PS2_INTERRUPT_PRIORITY );
-    NVIC_ClearPendingIRQ( PIN_INT0_IRQn + PS2_IntChannel );
-    NVIC_EnableIRQ( PIN_INT0_IRQn + PS2_IntChannel );
+    NVIC_SetPriority( PIN_INT0_IRQn + 0, PS2_INTERRUPT_PRIORITY );
+    NVIC_ClearPendingIRQ( PIN_INT0_IRQn + 0 );
+    NVIC_EnableIRQ( PIN_INT0_IRQn + 0 );
 }

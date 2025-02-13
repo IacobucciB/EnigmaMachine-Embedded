@@ -90,7 +90,7 @@ void Plugb_Init() {
  * It sequentially sets each pin as an output and checks which other pins detect a HIGH state.
  * The detected connections update the plugboardMappings table.
  *
- * @note If no connection is detected for a letter, it maps to itself (A → A, B → B, etc.).
+ * @note If no connection is detected for a letter, it maps to itself (A -> A, B -> B, etc.).
  */
 void Plugb_Scan() {
     for (uint8_t i = 0; i < NUM_LETTERS; i++) {

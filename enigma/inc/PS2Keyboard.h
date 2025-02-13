@@ -1,5 +1,5 @@
 /* Version V1.0.9 (Modified for EDU-CIAA)
-  
+
    	PS2Keyboard.h - Library for handling PS/2 keyboards on EDU-CIAA
 	Based on the original library by Paul Carpenter.
 
@@ -23,7 +23,7 @@
 	It may not be compatible with other architectures without additional modifications.
 
 	### ASSUMPTION: Only one PS/2 keyboard is connected.
-	
+
 	This implementation is designed for Latin-style keyboards using Scan Code Set 2, which is the default set for PS/2 keyboards on power-up.
 
 	### MAIN FUNCTIONALITY:
@@ -33,77 +33,77 @@
 
    --- DETAILED LIBRARY EXPLANATION ---
 
-	### Overview  
-	This is a fully-featured PS/2 keyboard library that supports:  
-	- All function and movement keys, including multilingual layouts.  
-	- Parity checking for sent/received data and request-based keyboard resends.  
-	- Automatic handling of the PS/2 protocol for **RESEND** and **ECHO** commands.  
-	- Functions to:  
-	- Retrieve the active scancode set (read-only).  
-	- Control LED indicators and lock states.  
-	- Read the keyboard ID.  
-	- Reset the keyboard.  
-	- Send **ECHO** commands.  
-	- Manage **NUM LOCK**, **CAPS LOCK**, and **SCROLL LOCK** states and LEDs.  
+	### Overview
+	This is a fully-featured PS/2 keyboard library that supports:
+	- All function and movement keys, including multilingual layouts.
+	- Parity checking for sent/received data and request-based keyboard resends.
+	- Automatic handling of the PS/2 protocol for **RESEND** and **ECHO** commands.
+	- Functions to:
+	- Retrieve the active scancode set (read-only).
+	- Control LED indicators and lock states.
+	- Read the keyboard ID.
+	- Reset the keyboard.
+	- Send **ECHO** commands.
+	- Manage **NUM LOCK**, **CAPS LOCK**, and **SCROLL LOCK** states and LEDs.
 	- Manage **NUM LOCK** and **SCROLL LOCK** internally
 
-	### Key Data Representation  
-	Keys are returned as a 16-bit (`uint16_t`) value containing:  
-	- **Make/Break** status.  
-	- **CAPS LOCK** state.  
-	- **Modifier keys**: SHIFT, CTRL, ALT, ALT GR, and GUI.  
-	- **Function key flag**, indicating non-printable characters.  
-	- **8-bit key code**.	
+	### Key Data Representation
+	Keys are returned as a 16-bit (`uint16_t`) value containing:
+	- **Make/Break** status.
+	- **CAPS LOCK** state.
+	- **Modifier keys**: SHIFT, CTRL, ALT, ALT GR, and GUI.
+	- **Function key flag**, indicating non-printable characters.
+	- **8-bit key code**.
 
 	#### Key Code Ranges (Lower Byte of `uint16_t`). See PS2Keyboard.h for details
-	- `0x00` → Invalid/Error.  
-	- `0x01 - 0x1F` → Function keys (e.g., CAPS, SHIFT, ALT, ENTER, DEL).  
-	- `0x1A - 0x1F` → Function keys with ASCII control codes (DEL, BS, TAB, ESC, ENTER, SPACE).  
-	- `0x20 - 0x60` → Printable characters:  
-		- `0x30 - 0x39` → Digits (`0-9`).  
-		- `0x41 - 0x5A` → Uppercase letters (`A-Z`).
-	- `0x8B` → Extra European key.  
-	- `0x61 - 0xA0` (less 0x8B) → Function and special keys:  
-		- `0x61 - 0x78` → Function keys (`F1 - F24`).  
-		- `0x79 - 0x8A` → Multimedia keys.  
-		- `0x8C - 0x8E` → ACPI power keys.  
-		- `0x91 - 0xA0` → Special multilingual keys (`F1` and `F2` included).  
-	- `0xA8 - 0xFF` → Keyboard communication commands (`F1` and `F2` have special multilingual codes).  
+	- `0x00` -> Invalid/Error.
+	- `0x01 - 0x1F` -> Function keys (e.g., CAPS, SHIFT, ALT, ENTER, DEL).
+	- `0x1A - 0x1F` -> Function keys with ASCII control codes (DEL, BS, TAB, ESC, ENTER, SPACE).
+	- `0x20 - 0x60` -> Printable characters:
+		- `0x30 - 0x39` -> Digits (`0-9`).
+		- `0x41 - 0x5A` -> Uppercase letters (`A-Z`).
+	- `0x8B` -> Extra European key.
+	- `0x61 - 0xA0` (less 0x8B) -> Function and special keys:
+		- `0x61 - 0x78` -> Function keys (`F1 - F24`).
+		- `0x79 - 0x8A` -> Multimedia keys.
+		- `0x8C - 0x8E` -> ACPI power keys.
+		- `0x91 - 0xA0` -> Special multilingual keys (`F1` and `F2` included).
+	- `0xA8 - 0xFF` -> Keyboard communication commands (`F1` and `F2` have special multilingual codes).
 
-	These ranges allow for key detection and efficient conversion to ASCII/UTF-8 while filtering out non-printable keys.  
+	These ranges allow for key detection and efficient conversion to ASCII/UTF-8 while filtering out non-printable keys.
 
-	### Key Flags (Upper Byte of `uint16_t`)  
-	Each bit represents a specific key state:  
+	### Key Flags (Upper Byte of `uint16_t`)
+	Each bit represents a specific key state:
 
-	| Define Name     | Bit Position  | Description |  
-	|-----------------|---------------|-------------|  
-	| `PS2_BREAK`     | 15 (MSB)      | `1` = Break key, `0` = Make key |  
-	| `PS2_SHIFT`     | 14            | `1` = SHIFT key pressed |  
-	| `PS2_CTRL`      | 13            | `1` = CTRL key pressed |  
-	| `PS2_CAPS`      | 12            | `1` = CAPS LOCK is ON |  
-	| `PS2_ALT`       | 11            | `1` = Left ALT key pressed |  
-	| `PS2_ALT_GR`    | 10            | `1` = Right ALT (ALT GR) key pressed |  
-	| `PS2_GUI`       | 9             | `1` = GUI key pressed |  
-	| `PS2_FUNCTION`  | 8             | `1` = Function key or non-printable character (SPACE, TAB, ENTER included), `0` = Standard character key |  
+	| Define Name     | Bit Position  | Description |
+	|-----------------|---------------|-------------|
+	| `PS2_BREAK`     | 15 (MSB)      | `1` = Break key, `0` = Make key |
+	| `PS2_SHIFT`     | 14            | `1` = SHIFT key pressed |
+	| `PS2_CTRL`      | 13            | `1` = CTRL key pressed |
+	| `PS2_CAPS`      | 12            | `1` = CAPS LOCK is ON |
+	| `PS2_ALT`       | 11            | `1` = Left ALT key pressed |
+	| `PS2_ALT_GR`    | 10            | `1` = Right ALT (ALT GR) key pressed |
+	| `PS2_GUI`       | 9             | `1` = GUI key pressed |
+	| `PS2_FUNCTION`  | 8             | `1` = Function key or non-printable character (SPACE, TAB, ENTER included), `0` = Standard character key |
 
-	### Error Codes  
-	Most functions return `0x0000` or `0xFFFF` to indicate errors. Other notable return values (bottom byte):  
-	- `0xAA` → Keyboard reset successfully and passed power-up tests. It will happen if keyboard plugged in after code start.
-	- `0xFC` → Keyboard general error or power-up failure.  
+	### Error Codes
+	Most functions return `0x0000` or `0xFFFF` to indicate errors. Other notable return values (bottom byte):
+	- `0xAA` -> Keyboard reset successfully and passed power-up tests. It will happen if keyboard plugged in after code start.
+	- `0xFC` -> Keyboard general error or power-up failure.
 
-   ### Custom Key Mapping  
+   ### Custom Key Mapping
 	Special key combinations, such as `<CTRL> + <ENTER>`, may require custom handling. The recommended approach is to use the **PS2KeyTable** library and extend it with a custom key mapping table. If modifying the base functionality, it is advised to create a separate library instead of altering this one to maintain compatibility.
 
 	### Related files:
-	- **PS2KeyCode.h** → Contains original PS/2 keyboard scancodes used by this library.
-	- **PS2KeyTable.h** → Provides mapping tables for converting scancodes into ASCII/UTF-8 characters.
+	- **PS2KeyCode.h** -> Contains original PS/2 keyboard scancodes used by this library.
+	- **PS2KeyTable.h** -> Provides mapping tables for converting scancodes into ASCII/UTF-8 characters.
 
    See this file for returned definitions of Keys and accessible definitions.
 
-   Refer to this file for the returned key definitions.  
-   - Defines starting with `PS2_KC_*` represent internal key codes from the keyboard.  
-   - Defines starting with `PS2_KEY_*` correspond to the key codes returned by this library.  
-   - Defines prefixed with `PS2_*` are intended for higher-level use.  
+   Refer to this file for the returned key definitions.
+   - Defines starting with `PS2_KC_*` represent internal key codes from the keyboard.
+   - Defines starting with `PS2_KEY_*` correspond to the key codes returned by this library.
+   - Defines prefixed with `PS2_*` are intended for higher-level use.
 
    ### LICENSE:
 	This software is open-source and distributed under the GNU Lesser General Public License (LGPL).
@@ -306,14 +306,13 @@
  *
  * This function configures the necessary GPIO pins and interrupt settings
  * to enable communication with a PS/2 keyboard. It sets the data and clock
- * pins as inputs with pull-up resistors and configures an interrupt to
+ * pins as inputs with pull-up resistors and configures a GPIO interrupt in channel 0 to
  * trigger on the falling edge of the clock signal.
  *
  * @param dataPin     GPIO pin used for the PS/2 data line.
  * @param irqPin      GPIO pin used for the PS/2 clock line (interrupt trigger).
- * @param intChannel  Interrupt channel assigned to the PS/2 clock signal.
  */
-void PS2Keyboard_Init(gpioMap_t dataPin, gpioMap_t irqPin, uint8_t intChannel);
+void PS2Keyboard_Init(gpioMap_t dataPin, gpioMap_t irqPin);
 
 /**
  * @brief Enables the PS/2 interrupt after resetting the state machine.
@@ -321,7 +320,7 @@ void PS2Keyboard_Init(gpioMap_t dataPin, gpioMap_t irqPin, uint8_t intChannel);
  * This function resets the internal PS/2 state and enables the external interrupt
  * associated with the PS/2 clock line, allowing the system to receive keyboard data.
  */
-void PS2KeyAdvanced_EnableInt(void);
+void PS2Keyboard_EnableInt(void);
 
 
 /**
@@ -330,7 +329,7 @@ void PS2KeyAdvanced_EnableInt(void);
  * This function disables the external interrupt associated with the PS/2 clock line,
  * preventing further keyboard data reception until re-enabled.
  */
-void PS2KeyAdvanced_DisableInt(void);
+void PS2Keyboard_DisableInt(void);
 
 
 /**
@@ -362,9 +361,9 @@ uint16_t PS2Keyboard_Read(void);
  * 
  * The function returns a byte where each bit represents the state of a lock key.
  * Use the predefined macros to extract specific lock states.
- *   - PS2_LOCK_SCROLL 
- *   - PS2_LOCK_NUM    
- *   - PS2_LOCK_CAPS   
+ *   - PS2_LOCK_SCROLL
+ *   - PS2_LOCK_NUM
+ *   - PS2_LOCK_CAPS
  *   - PS2_LOCK_EXTRA (rarely used)
  * 
  * Example usage:
@@ -384,9 +383,9 @@ uint8_t PS2Keyboard_GetLock();
  * Scroll Lock, and Extra Lock) and ensures the keyboard LEDs reflect the change.
  * 
  * The bits in the `code` parameter correspond to the following macros:
- *   - PS2_LOCK_SCROLL  
- *   - PS2_LOCK_NUM  
- *   - PS2_LOCK_CAPS  
+ *   - PS2_LOCK_SCROLL
+ *   - PS2_LOCK_NUM
+ *   - PS2_LOCK_CAPS
  *   - PS2_LOCK_EXTRA (only useful for very few keyboards)
  * 
  * @param code A byte where each bit represents the desired lock state.
@@ -426,7 +425,7 @@ void PS2Keyboard_SetNoRepeat(uint8_t data);
  * This function also resets the internal LED lock status and key status 
  * to match the keyboard’s state after reset.
  */
-void PS2Keyboard_ResetKey()
+void PS2Keyboard_ResetKey();
 
 
 /**
