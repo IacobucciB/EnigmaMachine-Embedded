@@ -1,22 +1,49 @@
-/*=============================================================================
- * Author: Martinez Lisandro <lisandromartz@gmail.com>
- * Date: 2024/11/28
- * Version: 0.5
- *===========================================================================*/
+w/**
+ * @file enigma.c
+ * @brief Main program for the Enigma machine simulation.
+ *
+ * This file contains the main function and supporting functions for the Enigma machine simulation.
+ * It initializes the hardware, configures the FSM, and handles the main loop for processing input
+ * and updating the FSM state.
+ *
+ * The program interacts with multiple hardware components, including:
+ * - A PS/2 keyboard for input
+ * - A plugboard for letter substitutions
+ * - Rotors that modify the encryption process
+ * - An LED matrix for visual feedback
+ * - A rotary encoder for rotor configuration
+ *
+ * The main loop handles button debouncing, FSM updates, and LED toggling.
+ *
+ * @version 1.0
+ * @date 2025/02/10
+ *
+ * @note This implementation is designed for educational purposes and may not be
+ *       suitable for production use.
+ *
+ * @author
+ *   - Juan Bautista Iacobucci <link00222@gmail.com>
+ *   - Fernando Ramirez Tolentino <fernandoramireztolentino@hotmail.com>
+ *   - Lisandro Martinez <lisandromartz@gmail.com>
+ *
+ * @copyright
+ * Released under the MIT License.
+ */
 
 /*=====[Inclusions of function dependencies]=================================*/
 
 #include "enigma.h"
 #include "sapi.h"
-#include "MEF.h"
+#include "FSM.h"
 
 /*=====[Definition macros of private constants]==============================*/
-#define BUTTON_PIN TEC1
-#define LED_PERIOD 1000
 
-#define CHECK_MSEC 10     // Cada cuanto se lee el boton
-#define PRESS_MSEC 50     // Tiempo estable previo a registrar "presionar"
-#define RELEASE_MSEC 50   // Tiempo estable previo a registrar "soltar"
+#define BUTTON_PIN TEC1       /**< Pin for the button */
+#define LED_PERIOD 1000       /**< LED toggle period in milliseconds */
+
+#define CHECK_MSEC 10         /**< Button check interval in milliseconds */
+#define PRESS_MSEC 50         /**< Debounce time for button press in milliseconds */
+#define RELEASE_MSEC 50       /**< Debounce time for button release in milliseconds */
 
 /*=====[Definitions of extern global variables]==============================*/
 extern pinInitGpioLpc4337_t gpioPinsInit[];
@@ -25,90 +52,104 @@ extern pinInitGpioLpc4337_t gpioPinsInit[];
 
 /*=====[Definitions of private global variables]=============================*/
 
-void debounceSwitch(bool_t *key_changed, bool_t *key_pressed)
-{
-	static uint8_t count = RELEASE_MSEC / CHECK_MSEC;
-	static bool_t debouncedKeyPress = false;
+/**
+ * @brief Debounces the button input.
+ *
+ * This function debounces the button input to ensure stable state changes.
+ * It uses a timer to filter out noise and short presses/releases.
+ *
+ * @param key_changed Pointer to a boolean that indicates if the key state has changed.
+ * @param key_pressed Pointer to a boolean that indicates if the key is currently pressed.
+ */
+void debounceSwitch(bool_t *key_changed, bool_t *key_pressed) {
+    static uint8_t count = RELEASE_MSEC / CHECK_MSEC;
+    static bool_t debouncedKeyPress = false;
 
-	bool_t rawState;
+    bool_t rawState;
 
-	*key_changed = false;
-	*key_pressed = debouncedKeyPress;
+    *key_changed = false;
+    *key_pressed = debouncedKeyPress;
 
-	rawState = gpioRead(BUTTON_PIN);
+    rawState = gpioRead(BUTTON_PIN);
 
-	if (rawState == debouncedKeyPress)
-	{
-		// setear el timer que permite cambiar el estado actual.
-		if (debouncedKeyPress)
-			count = RELEASE_MSEC / CHECK_MSEC;
-		else
-			count = PRESS_MSEC / CHECK_MSEC;
-	}
-	else
-	{
-		// 'key' cambió - espera un nuevo estado para volver a estable.
-		if (--count == 0)
-		{
-			// el timer expiró - se realiza el cambio.
-			debouncedKeyPress = rawState;
-			*key_changed = true;              // se avisa que se cambio el estado
-			*key_pressed = debouncedKeyPress; // se pasa el estado al que cambio
-			// y ahora se resetea el timer.
-			if (debouncedKeyPress)
-				count = RELEASE_MSEC / CHECK_MSEC;
-			else
-				count = PRESS_MSEC / CHECK_MSEC;
-		}
-	}
+    if (rawState == debouncedKeyPress) {
+        // Reset the timer for stable state
+        if (debouncedKeyPress)
+            count = RELEASE_MSEC / CHECK_MSEC;
+        else
+            count = PRESS_MSEC / CHECK_MSEC;
+    } else {
+        // Key state changed - wait for stable state
+        if (--count == 0) {
+            // Timer expired - change state
+            debouncedKeyPress = rawState;
+            *key_changed = true;              // Notify state change
+            *key_pressed = debouncedKeyPress; // Update key state
+            // Reset the timer
+            if (debouncedKeyPress)
+                count = RELEASE_MSEC / CHECK_MSEC;
+            else
+                count = PRESS_MSEC / CHECK_MSEC;
+        }
+    }
 }
 
-static void configButton()
-{
-	Chip_SCU_PinMux(
-			gpioPinsInit[BUTTON_PIN].pinName.port,
-			gpioPinsInit[BUTTON_PIN].pinName.pin,
-			SCU_MODE_PULLUP | SCU_MODE_INBUFF_EN,
-			SCU_MODE_FUNC0
-		);
-	Chip_GPIO_SetDir( LPC_GPIO_PORT, 0, ( 1 << 4 ), 0 );
+/**
+ * @brief Configures the button pin.
+ *
+ * This function configures the button pin as an input with a pull-up resistor.
+ */
+static void configButton() {
+    Chip_SCU_PinMux(
+        gpioPinsInit[BUTTON_PIN].pinName.port,
+        gpioPinsInit[BUTTON_PIN].pinName.pin,
+        SCU_MODE_PULLUP | SCU_MODE_INBUFF_EN,
+        SCU_MODE_FUNC0
+    );
+    Chip_GPIO_SetDir(LPC_GPIO_PORT, 0, (1 << 4), 0);
 }
 
 /*=====[Main function, program entry point after power on or reset]==========*/
 
+/**
+ * @brief Main function for the Enigma machine simulation.
+ *
+ * This function initializes the hardware, configures the FSM, and handles the main loop
+ * for processing input and updating the FSM state. It debounces the button input, updates
+ * the FSM state, and toggles the LED.
+ *
+ * @return int This function does not return.
+ */
 int main(void) {
-	// ----- Setup -----------------------------------
-	boardInit();
-	configButton();
-	MEF_Init();
+    // ----- Setup -----------------------------------
+    boardInit();
+    configButton();
+    FSM_Init();
 
-	delay_t ledDelay;
-	delayInit( &ledDelay, LED_PERIOD/2 );
+    delay_t ledDelay;
+    delayInit(&ledDelay, LED_PERIOD / 2);
 
-	tick_t checkTime = tickRead(); 	// Ultimo tick en el que fue observado el pulsador
-	bool_t keyChanged; 	// Almacena el estado actual sin rebote del pulsador.
-	bool_t keyPressed; 	// Indica si el pulsador cambió de un estado a otro.
+    tick_t checkTime = tickRead();  // Last tick when the button was checked
+    bool_t keyChanged;  // Stores the current debounced state of the button
+    bool_t keyPressed;  // Indicates if the button state has changed
 
-	// ----- Repeat for ever -------------------------
-	while ( true ) {
-		if ( tickRead() - checkTime > CHECK_MSEC )
-		{
-			checkTime = tickRead();
-			debounceSwitch(&keyChanged, &keyPressed);
-			if (keyChanged == true && keyPressed == false)
-			{
-				// Hacer tarea cuando se presiono y solto el boton
-				MEF_Update();
-			}
-		}
+    // ----- Repeat forever -------------------------
+    while (true) {
+        if (tickRead() - checkTime > CHECK_MSEC) {
+            checkTime = tickRead();
+            debounceSwitch(&keyChanged, &keyPressed);
+            if (keyChanged == true && keyPressed == false) {
+                // Perform task when the button is pressed and released
+                FSM_Update();
+            }
+        }
 
-		if( delayRead( &ledDelay ) )
-		{
-			gpioToggle(LED);
-		}
+        if (delayRead(&ledDelay)) {
+            gpioToggle(LED);
+        }
 
-		MEF_Run();
-	}
+        FSM_Run();
+    }
 
 	// YOU NEVER REACH HERE, because this program runs directly or on a
 	// microcontroller and is not called by any Operating System, as in the
