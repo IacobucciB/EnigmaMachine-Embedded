@@ -1,5 +1,5 @@
 /**
- * @file rotary_encoder.c
+ * @file rotary_encoder.h
  * @brief Library for handling rotary encoders on EDU-CIAA.
  *
  * This library provides functions to initialize and read a rotary encoder
