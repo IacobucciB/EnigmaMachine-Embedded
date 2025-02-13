@@ -9,7 +9,7 @@
 #include "plugb.h"
 #include "rotary_encoder.h"
 #include "enigmaAPI.h"
-#include "PS2KeyAdvanced.h"
+#include "PS2Keyboard.h"
 #include "animation.h"
 #include "MEF.h"
 
@@ -58,7 +58,7 @@ void MEF_Init()
 	RotaryEncoder_Init();
 	delayInit( &rotorAnimDelay, 500 );
 
-	PS2KeyAdvanced_begin(DATA_PIN, IRQ_PIN, 0);
+	PS2Keyboard_Init(DATA_PIN, IRQ_PIN, 0);
 
 	Animation_Init();
 
@@ -84,7 +84,7 @@ void MEF_Update(void) {
 		}
 		else if ( state == ENCRYPT )
 		{
-			PS2KeyAdvanced_DisableInt();
+			PS2Keyboard_DisableInt();
 		}
 		state++;
 		state %= 3;
@@ -94,7 +94,7 @@ void MEF_Update(void) {
 		case ENCRYPT:
 			out = 0;
 			enigma_init( 3, 2, 1, rotorPos[0], rotorPos[1], rotorPos[2] );
-			PS2KeyAdvanced_EnableInt();
+			PS2Keyboard_EnableInt();
 			keyPressed = false;
 			Animation_WaitInput(true);
 			pressMsgDone = Animation_ShiftText(encryptMessage, true);
@@ -115,10 +115,10 @@ void MEF_Update(void) {
 
 static void MEF_Encrypt()
 {
-	if ( PS2KeyAdvanced_available() )
+	if ( PS2Keyboard_Available() )
 	{
 		keyPressed = true;
-		uint16_t c = PS2KeyAdvanced_read();
+		uint16_t c = PS2Keyboard_Read();
 		if (c > 0) {
 			printf("Value ");
 			if ('A' <= c && c <= 'Z')

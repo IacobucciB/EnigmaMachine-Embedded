@@ -1,5 +1,5 @@
 /* Version V1.0.8
-  PS2KeyTable.h - PS2KeyAdvanced library keycode values to return values
+  PS2KeyTable.h - PS2Keyboard library keycode values to return values
   Copyright (c) 2007 Free Software Foundation.  All right reserved.
   Written by Paul Carpenter, PC Services <sales@pcserviceselectronics.co.uk>
   Created September 2014
@@ -21,7 +21,7 @@
   Definitions used for key codes from a PS2 keyboard, do not use in your
   code these are handled by the library.
 
-  See PS2KeyAdvanced.h for codes returned from library and flag settings
+  See PS2Keyboard.h for codes returned from library and flag settings
 
   Two sets of tables
 

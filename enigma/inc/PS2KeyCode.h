@@ -1,5 +1,5 @@
 /* Version V1.0.8
-  PS2KeyCode.h - PS2KeyAdvanced library Internal actual PS2 key code sequences
+  PS2KeyCode.h - PS2Keyboard library Internal actual PS2 key code sequences
   Copyright (c) 2007 Free Software Foundation.  All right reserved.
   Written by Paul Carpenter, PC Services <sales@pcserviceselectronics.co.uk>
   Created September 2014
@@ -20,7 +20,7 @@
   code these are to be handled INTERNALLY by the library.
   (may disappear in updates do not rely on this file or definitions)
 
-  See PS2KeyAdvanced.h for codes returned from library and flag settings
+  See PS2Keyboard.h for codes returned from library and flag settings
 
   Defines are in three groups
 
