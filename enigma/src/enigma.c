@@ -1,4 +1,4 @@
-w/**
+/**
  * @file enigma.c
  * @brief Main program for the Enigma machine simulation.
  *
